@@ -196,7 +196,7 @@ export default function AddPropertyTabs() {
       [fieldId]: isChecked,
     }));
   };
-  const handleRadioChange = (e, fieldId, selectedOption) => {
+  const handleRadioChange = (fieldId, selectedOption) => {
     setTab2((prevTab2Data) => ({
       ...prevTab2Data,
       [fieldId]: selectedOption,
