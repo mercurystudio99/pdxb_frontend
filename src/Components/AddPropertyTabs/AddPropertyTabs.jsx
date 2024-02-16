@@ -123,10 +123,19 @@ export default function AddPropertyTabs() {
       ...tab1,
       [name]: value,
     });
-    setTab6({
-      ...tab6,
-      [name]: value,
-    });
+    if (name == "title") {
+      setTab6({
+        ...tab6,
+        "MetaTitle": value,
+        "MetaKeyword": value,
+      });
+    }
+    if (name == "propertyDesc") {
+      setTab6({
+        ...tab6,
+        "MetaDesc": value,
+      });
+    }
   };
   const handleCategoryChange = (e) => {
     e.preventDefault();
@@ -271,11 +280,19 @@ export default function AddPropertyTabs() {
       ...prevState,
       titleImage: acceptedFiles,
     }));
+    // Append the uploaded ogImage files to the uploadedOgImages state
+    setUploadedOgImages((prevImages) => [...prevImages, ...acceptedFiles]);
+    setTab6((prevState) => ({
+      ...prevState,
+      ogImages: acceptedFiles,
+    }));
   }, []);
 
   const removeImage = (index) => {
     // Remove an image from the uploadedImages state by index
     setUploadedImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    // Remove an ogImage from the uploadedOgImages state by index
+    setUploadedOgImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -536,8 +553,13 @@ export default function AddPropertyTabs() {
       // Display a toast message to fill in all required fields
       toast.error("Please fill in all required fields ");
     } else {
-      // Proceed to the next tab
-      setValue(value + 1);
+      if (e.target.name == "propertyDetails") {
+        // Proceed to the next next tab
+        setValue(value + 2);
+      } else {
+        // Proceed to the next tab
+        setValue(value + 1);
+      }
     }
   };
   const handleNextTab2 = (e) => {
@@ -702,7 +724,7 @@ export default function AddPropertyTabs() {
           aria-label="basic tabs example"
         >
           <Tab label={translate("propDeatils")} {...a11yProps(0)} />
-          <Tab label={translate("SEOS")} {...a11yProps(1)} />
+          <Tab label={translate("SEOS")} {...a11yProps(1)} className="d-none" />
           <Tab label={translate("facilities")} {...a11yProps(2)} />
           <Tab label={translate("OTF")} {...a11yProps(3)} />
           <Tab label={translate("location")} {...a11yProps(4)} />
@@ -783,6 +805,10 @@ export default function AddPropertyTabs() {
                     value={tab1.title}
                   />
                 </div>
+                <p style={{ color: "#FF0000", fontSize: "smaller" }}>
+                  {" "}
+                  {translate("Warning: Meta Title")}
+                </p>
                 <div className="add_prop_fields">
                   <span>{translate("dldPermitNumber")}</span>
                   <input
@@ -867,11 +893,14 @@ export default function AddPropertyTabs() {
                   value={tab1.propertyDesc}
                 />
               </div>
+              <p style={{ color: "#FF0000", fontSize: "smaller" }}>
+                {translate("Warning: Meta Description")}
+              </p>
             </div>
           </div>
 
           <div className="nextButton">
-            <button type="button" onClick={handleNextTab}>
+            <button type="button" name="propertyDetails" onClick={handleNextTab}>
               {translate("next")}
             </button>
           </div>
@@ -1129,7 +1158,7 @@ export default function AddPropertyTabs() {
             )}
           </div>
           <div className="nextButton">
-            <button type="button" onClick={handleNextTab}>
+            <button type="button" name="facilities" onClick={handleNextTab}>
               {translate("next")}
             </button>
           </div>
@@ -1160,7 +1189,7 @@ export default function AddPropertyTabs() {
               : null}
           </div>
           <div className="nextButton">
-            <button type="button" onClick={handleNextTab}>
+            <button type="button" name="odFacilities" onClick={handleNextTab}>
               {translate("next")}
             </button>
           </div>
