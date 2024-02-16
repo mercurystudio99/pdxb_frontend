@@ -13,7 +13,12 @@ import { translate } from "@/utils";
 import { languageData } from "@/store/reducer/languageSlice";
 import Image from "next/image";
 import FirebaseData from "@/utils/Firebase.js";
-import { updateEmail } from "firebase/auth";
+import {
+  updateEmail,
+  EmailAuthProvider,
+  signInWithEmailAndPassword,
+  updatePassword
+} from "firebase/auth";
 const VerticleLayout = dynamic(
   () => import("../../../src/Components/AdminLayout/VerticleLayout.jsx"),
   { ssr: false }
@@ -25,6 +30,9 @@ const UserProfile = () => {
   const navigate = useRouter();
   const FcmToken = useSelector(Fcmtoken);
   const { authentication } = FirebaseData();
+  const [oldPassword, setOldPassword] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [formData, setFormData] = useState({
     fullName: userProfileData?.name ?? "",
     email: userProfileData?.email ?? "",
@@ -136,6 +144,53 @@ const UserProfile = () => {
       },
     });
     updateEmail(authentication.currentUser, formData.email);
+  };
+  const handleUpdatePassword = (e) => {
+    e.preventDefault();
+
+    if (password === "") {
+      toast.error("Please Enter Password");
+      return;
+    }
+    if (confirmPassword === "") {
+      toast.error("Please Enter Confirm Password");
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast.error("Password and Confirm Password not match");
+      return;
+    }
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    const emailCred = EmailAuthProvider.credential(
+      authentication.currentUser,
+      oldPassword
+    );
+    signInWithEmailAndPassword(
+      authentication,
+      userProfileData.email,
+      oldPassword
+    )
+      .then(() => {
+        updatePassword(authentication.currentUser, password)
+          .then(() => {
+            toast.success("Password Updated Successfully");
+            navigate.push("/");
+          })
+          .catch((error) => {
+            console.log(error);
+            toast.error(error.message);
+          });
+      })
+      .catch((error) => {
+        if (error.code === "auth/wrong-password") {
+          toast.error("The old password is wrong.");
+        }
+        toast.error(error.message);
+      });
   };
 
   return (
@@ -368,6 +423,60 @@ const UserProfile = () => {
                     <button type="submit" onClick={handleUpdateProfile}>
                       {translate("updateProfile")}
                     </button>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12">
+                <div className="card" id="personal_pass_card">
+                  <div className="card-body">
+                    <div className="row">
+                      {/** */}
+                      <div className="col-sm-12 col-md-6">
+                        <div className="add_user_fields_div">
+                          <span>{translate("oldpassword")}</span>
+                          <input
+                            type="password"
+                            name="oldpassword"
+                            placeholder="Enter Your old Password"
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-12 col-md-6">
+                        <div className="add_user_fields_div">
+                          <span>{translate("password")}</span>
+                          <input
+                            type="password"
+                            name="password"
+                            placeholder="Enter Your New Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-12 col-md-6">
+                        <div className="add_user_fields_div">
+                          <span>{translate("confirmationPassword")}</span>
+                          <input
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Enter Your Confirmation Password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-12 mt-5">
+                      <div className="col-12">
+                        <div className="submit_div">
+                          <button type="submit" onClick={handleUpdatePassword}>
+                            {translate("changePassword")}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

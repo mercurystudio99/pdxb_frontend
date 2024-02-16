@@ -692,44 +692,6 @@ export default function VerticleLayout(props) {
                 />
               </ListItemButton>
             </ListItem>
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              className={
-                isRouteActive("/user/changepassword")
-                  ? "drawer_list_item_active"
-                  : "drawer_list_item"
-              }
-            >
-              <Link href="/user/changepassword">
-                <ListItemButton
-                  sx={{
-                    minHeight: 30,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    className={
-                      isRouteActive("/user/changepassword")
-                        ? "drawer_list_icon_active"
-                        : "drawer_list_icon"
-                    }
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <DashboardOutlinedIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={translate("changePassword")}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              </Link>
-            </ListItem>
           </Link>
           <Link href="/user/notifications">
             <ListItem
