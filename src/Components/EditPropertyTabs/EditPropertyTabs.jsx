@@ -481,6 +481,16 @@ export default function EditPropertyTabs() {
   };
 
   const onDrop = useCallback((acceptedFiles) => {
+    // Log the acceptedFiles to check if they are being received correctly
+    // Check if each selected image is less than or equal to 300KB
+    const isSizeValid = acceptedFiles.every((file) => file.size <= 300 * 1024);
+
+    if (!isSizeValid) {
+      // Display a toast error message
+      toast.error("Error: Selected image size should be 300KB or less.");
+      return;
+    }
+
     // Append the uploaded files to the uploadedImages state
     setUploadedImages((prevImages) => [...prevImages, ...acceptedFiles]);
     setTab5((prevState) => ({
