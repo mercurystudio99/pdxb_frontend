@@ -93,7 +93,7 @@ export default function AddPropertyTabs() {
   });
   const [tab6, setTab6] = useState({
     MetaTitle: "",
-    MetaKeyword: "",
+    MetaKeyword: "PDXBProperties,UAERealEstate,BuySellRentUAE,PropertyListingsUAE,UAEPropertyMarket,BuyPropertyUAE,SellPropertyUAE,RentPropertyUAE,PDXB,PropertyDXB",
     MetaDesc: "",
     ogImages: [],
   });
@@ -126,14 +126,13 @@ export default function AddPropertyTabs() {
     if (name == "title") {
       setTab6({
         ...tab6,
-        "MetaTitle": value,
-        "MetaKeyword": value,
+        "MetaTitle": value.substring(0, 60),
       });
     }
     if (name == "propertyDesc") {
       setTab6({
         ...tab6,
-        "MetaDesc": value,
+        "MetaDesc": value.substring(0, 160),
       });
     }
   };
@@ -805,10 +804,10 @@ export default function AddPropertyTabs() {
                     value={tab1.title}
                   />
                 </div>
-                <p style={{ color: "#FF0000", fontSize: "smaller" }}>
+                {/* <p style={{ color: "#FF0000", fontSize: "smaller" }}>
                   {" "}
                   {translate("Warning: Meta Title")}
-                </p>
+                </p> */}
                 <div className="add_prop_fields">
                   <span>{translate("dldPermitNumber")}</span>
                   <input
@@ -893,9 +892,9 @@ export default function AddPropertyTabs() {
                   value={tab1.propertyDesc}
                 />
               </div>
-              <p style={{ color: "#FF0000", fontSize: "smaller" }}>
+              {/* <p style={{ color: "#FF0000", fontSize: "smaller" }}>
                 {translate("Warning: Meta Description")}
-              </p>
+              </p> */}
             </div>
           </div>
 
