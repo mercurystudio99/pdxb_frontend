@@ -39,6 +39,7 @@ export const GET_SEO_SETTINGS = "get_seo_settings";
 // is login user check
 export const getUserID = () => {
   let user = store.getState()?.User_signup;
+  console.log('user:', user);
   if (user) {
     try {
       return user?.data?.data?.id;

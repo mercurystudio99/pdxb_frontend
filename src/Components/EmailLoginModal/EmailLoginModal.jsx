@@ -21,6 +21,9 @@ import {
   settingsLoadedLogin,
 } from "@/store/reducer/settingsSlice";
 import Swal from "sweetalert2";
+import axios from "axios";
+const backend_api = process.env.NEXT_PUBLIC_API_URL;
+const end_point = process.env.NEXT_PUBLIC_END_POINT;
 
 const EmailLoginModal = ({ isOpen, onClose }) => {
   const LOGIN = "login";
@@ -134,7 +137,6 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
             onLoginSuccess(userCredential);
 
             toast.success(translate("registersuccess"));
-            console.log(user);
           })
           .catch((error) => {
             if (error.code === "auth/email-already-in-use") {
@@ -155,6 +157,7 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
   const onLogin = (e) => {
     e.preventDefault();
     console.log(emailValue, passwordValue);
+    console.log('authentication:', authentication);
     if (!emailValue || !passwordValue) {
       toast.error("Please enter your Email and Password");
     } else {
@@ -170,11 +173,94 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
             onLoginSuccess(userCredential);
 
             toast.success(translate("loginsuccess"));
-            console.log(user);
           })
           .catch((error) => {
+            console.log('error:', error.message);
+            if (error.message === 'Firebase: Error (auth/user-not-found).') {
+              axios.post(`${backend_api}${end_point}get_user_phone`, {
+                email: emailValue,
+                password: passwordValue
+              })
+                  .then(res => {
+                    if (res.data.mobile === undefined) {
+                      toast.error("Invalid Email or Password");
+                    } else {
+                      signupLoaded(
+                          "",
+                          "",
+                          res.data.mobile,
+                          "1",
+                          "",
+                          res.data.firebase_id,
+                          "",
+                          "",
+                          FcmToken,
+                          (res) => {
+                            let signupData = res.data;
+
+                            // Show a success toast notification
+                            setShowLoader(false);
+
+                            // Check if any of the required fields is empty
+                            if (!res.error) {
+                              if (
+                                  signupData.name === "" ||
+                                  signupData.email === "" ||
+                                  // signupData.address === "" ||
+                                  signupData.logintype === ""
+                              ) {
+                                navigate.push("/user-register");
+                                onClose(); // Close the modal
+                              } else {
+                                toast.success(res.message); // Show a success toast
+                                onClose(); // Close the modal
+                              }
+                              settingsLoadedLogin(
+                                  null,
+                                  signupData?.id,
+                                  (res) => {},
+                                  (error) => {
+                                    console.log(error);
+                                  }
+                              );
+                            }
+                          },
+                          (err) => {
+                            console.log(err);
+                            if (
+                                err ===
+                                "Account Deactivated by Administrative please connect to them"
+                            ) {
+                              onClose(); // Close the modal
+                              Swal.fire({
+                                title: "Opps!",
+                                text: "Account Deactivated by Administrative please connect to them",
+                                icon: "warning",
+                                showCancelButton: false,
+                                customClass: {
+                                  confirmButton: "Swal-confirm-buttons",
+                                  cancelButton: "Swal-cancel-buttons",
+                                },
+                                confirmButtonText: "Ok",
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  navigate.push("/contact-us");
+                                }
+                              });
+                            }
+                          },
+                          () => {},
+                          res.data.orn_number,
+                          res.data.whatsapp_number
+                      );
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  })
+            }
             //auth/invalid-login-credentials
-            if (error.code === "auth/invalid-login-credentials") {
+            else if (error.code === "auth/invalid-login-credentials") {
               toast.error("Invalid Email or Password");
             } else {
               const errorMessage = error.message;
@@ -189,7 +275,6 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
     }
   };
   const onEmailChange = (e) => {
-    console.log(e.target.value);
     setEmailValue(e.target.value);
   };
   const onPasswordChange = (e) => {

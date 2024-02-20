@@ -11,6 +11,7 @@ const persistConfig = {
     key: "root",
     storage,
 };
+
 const rootReducer = combineReducers({
     Settings: settingsReducer,
     User_signup: authReducer,

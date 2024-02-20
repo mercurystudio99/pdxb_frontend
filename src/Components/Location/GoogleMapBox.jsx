@@ -27,8 +27,8 @@ const GoogleMapBox = ({ onSelectLocation, apiKey, latitude, longitude }) => {
     const fetchData = async () => {
       try {
         const reverseGeocodedData = await performReverseGeocoding(
-          latitude,
-          longitude
+            initialLocation.lat,
+            initialLocation.lng
         );
 
         if (reverseGeocodedData) {
