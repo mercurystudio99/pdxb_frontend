@@ -11,6 +11,8 @@ import {
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  linkWithCredential,
+  EmailAuthProvider
 } from "firebase/auth";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -135,30 +137,64 @@ const UserRegister = () => {
         return;
       }
     }
-    UpdateProfileApi({
-      userid: signupData.data.data.id,
-      name: username,
-      email: email,
-      mobile: signupData.data?.data?.mobile ?? "",
-      type: "3",
-      address: address,
-      firebase_id: signupData.data.data.firebase_id,
-      logintype: "mobile",
-      profile: image,
-      fcm_id: FcmToken,
-      notification: "1",
-      city: selectedLocation.city,
-      state: selectedLocation.state,
-      country: selectedLocation.country,
-      onSuccess: (res) => {
-        toast.success("User Register Successfully.");
-        loadUpdateUserData(res.data);
-        navigate.push("/");
-      },
-      onError: (err) => {
-        toast.error(err.message);
-      },
-    });
+    if (email && password) {
+      var credential = EmailAuthProvider.credential(email, password);
+      linkWithCredential(authentication.currentUser, credential).then((cred) => {
+        UpdateProfileApi({
+          userid: signupData.data.data.id,
+          name: username,
+          email: email,
+          mobile: signupData.data?.data?.mobile ?? "",
+          type: "3",
+          address: address,
+          firebase_id: signupData.data.data.firebase_id,
+          logintype: "mobile",
+          profile: image,
+          fcm_id: FcmToken,
+          notification: "1",
+          city: selectedLocation.city,
+          state: selectedLocation.state,
+          country: selectedLocation.country,
+          onSuccess: (res) => {
+            toast.success("User Register Successfully.");
+            loadUpdateUserData(res.data);
+            navigate.push("/");
+          },
+          onError: (err) => {
+            toast.error(err.message);
+          },
+        });
+      }).catch((error) => {
+        if (error.code === "auth/provider-already-linked") {
+          toast.error("Email Provider already linked");
+        } else if (error.code === "auth/user-token-expired") {
+          toast.error("User token expired");
+        } else if (error.code === "auth/email-already-in-use") {
+            toast.error("Email already in use please try with another email");
+        } else if (error.code === "auth/weak-password") {
+          toast.error("Password should be at least 6 characters");
+        }
+        const errorMessage = error.message;
+        toast.error(errorMessage);
+      });
+      // createUserWithEmailAndPassword(
+      //   authentication,
+      //   email,
+      //   password
+      // )
+      //   .then((usercredential) => {
+      //   })
+      //   .catch((error) => {
+      //     if (error.code === "auth/email-already-in-use") {
+      //       toast.error("Email already in use please try with another email");
+      //     } else if (error.code === "auth/weak-password") {
+      //       toast.error("Password should be at least 6 characters");
+      //     }
+      //     const errorMessage = error.message;
+      //     toast.error(errorMessage);
+      //     console.log(error.errorMessage);
+      //   });
+    }
   };
 
   return (
