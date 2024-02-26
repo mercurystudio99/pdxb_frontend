@@ -78,6 +78,7 @@ const UserRegister = () => {
   };
 
   useEffect(() => {
+    authentication.settings.appVerificationDisabledForTesting = true;
     generateRecaptcha();
     return () => {
       // Clear the recaptcha container
@@ -306,7 +307,7 @@ const UserRegister = () => {
       } else if (!emailRegex.test(email)) {
         toast.error("Please enter a valid email address");
         return;
-      } else if (!phoneRegex.test(phone)) {
+      } else if (!signupData.data?.data?.mobile && !phoneRegex.test(phone)) {
         toast.error("Please enter a valid phone number");
         return;
       }
@@ -397,14 +398,20 @@ const UserRegister = () => {
     }
     if (!signupData.data?.data?.mobile && signupData.data?.data?.email) {
       let appVerifier = window.recaptchaVerifier;
+      let mobile = phone;
       const provider = new PhoneAuthProvider(authentication);
-      provider.verifyPhoneNumber('+16464034732', appVerifier).then((verificationId) => {
+      provider.verifyPhoneNumber(mobile, appVerifier).then((verificationId) => {
         console.log(verificationId)
         setVerificationID(verificationId);
         setShowOtpModal(true);
       }).catch((error) => {
-        console.log(error);
-        toast.error(error);
+        if (error.code === "auth/invalid-app-credential") {
+          toast.error("Sorry. please try again.");
+        } else if (error.code === "auth/too-many-requests") {
+          toast.error("Too many requests. Please try again later.");
+        }
+        const errorMessage = error.message;
+        toast.error(errorMessage);  
       });
     }
   };
@@ -421,7 +428,7 @@ const UserRegister = () => {
 
     const credential = PhoneAuthProvider.credential(verificationID, otp);
     console.log(credential)
-    signInWithCredential(authentication, credential).then((result) => {
+    linkWithCredential(authentication.currentUser, credential).then((cred) => {
       UpdateProfileApi({
         userid: signupData.data.data.id,
         name: username,
@@ -453,11 +460,11 @@ const UserRegister = () => {
         toast.error("User token expired");
       } else if (error.code === "auth/too-many-requests") {
           toast.error("Too many requests. Please try again later.");
-        } else if (error.code === "auth/invalid-phone-number") {
-          toast.error("Invalid phone number. Please enter a valid phone number.");
-        } else if (error.code === "auth/invalid-verification-code") {
-          toast.error("Invalid OTP number. Please enter a valid OTP number.");
-          } else if (error.code === "auth/operation-not-allowed") {
+      } else if (error.code === "auth/invalid-phone-number") {
+        toast.error("Invalid phone number. Please enter a valid phone number.");
+      } else if (error.code === "auth/invalid-verification-code") {
+        toast.error("Invalid OTP number. Please enter a valid OTP number.");
+      } else if (error.code === "auth/operation-not-allowed") {
         toast.error("Operation not allowed");
       }
       const errorMessage = error.message;
