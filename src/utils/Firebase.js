@@ -14,14 +14,23 @@ import { store } from "@/store/store";
 
 const FirebaseData = () => {
   let firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_APP_ID,
-    measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
+    apiKey: "AIzaSyCUGtM0RKrg_fjG1T7sAMeYy5tFfcc10CU",
+    authDomain: "pdxb-d1479.firebaseapp.com",
+    projectId: "pdxb-d1479",
+    storageBucket: "pdxb-d1479.appspot.com",
+    messagingSenderId: "771404070650",
+    appId: "1:771404070650:web:292f92a3978719f5fc5343",
+    measurementId: "G-7KSZ2Z3CXG",
   };
+  // let firebaseConfig = {
+  //   apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  //   authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  //   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  //   storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  //   messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  //   appId: process.env.NEXT_PUBLIC_APP_ID,
+  //   measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
+  // };
 
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
@@ -97,7 +106,8 @@ const FirebaseData = () => {
       const permission = await Notification.requestPermission();
       if (permission === "granted") {
         getToken(messaging, {
-          vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
+          vapidKey: "BJRV11-47VPbWHx6czXaJ8hTYOp3lMV2h7Pnf2HyeJ_omCt1rBrh9DKav2t7PtVWsqfBZhxHU8aKakZmkE2Y12k",
+          // vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
         })
           .then((currentToken) => {
             if (currentToken) {

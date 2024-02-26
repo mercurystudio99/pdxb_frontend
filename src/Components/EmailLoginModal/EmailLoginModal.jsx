@@ -143,10 +143,9 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
               toast.error("Email already in use please try with another email");
             } else if (error.code === "auth/weak-password") {
               toast.error("Password should be at least 6 characters");
+            } else {
+              toast.error("Something went wrong");
             }
-            const errorMessage = error.message;
-            toast.error(errorMessage);
-            console.log(error.errorMessage);
           });
         // onClose();
       } else {

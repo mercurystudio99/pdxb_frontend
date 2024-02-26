@@ -78,7 +78,7 @@ const UserRegister = () => {
   };
 
   useEffect(() => {
-    authentication.settings.appVerificationDisabledForTesting = true;
+    // authentication.settings.appVerificationDisabledForTesting = true;
     generateRecaptcha();
     return () => {
       // Clear the recaptcha container
@@ -295,9 +295,9 @@ const UserRegister = () => {
     } else if (signupData.data?.data?.mobile && !confirmPassword) {
       toast.error("Please confirm your Password");
       return;
-    // } else if (!selectedLocation) {
-    //   toast.error("Please select your location");
-    //   return;
+    } else if (!selectedLocation) {
+      toast.error("Please select your location");
+      return;
     } else {
       const phoneRegex = /^\+[1-9]\d{1,14}$/; // Regular expression to match valid phone numbers with country code
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; // Regular expression to match valid email addresses
@@ -351,9 +351,9 @@ const UserRegister = () => {
           profile: image,
           fcm_id: FcmToken,
           notification: "1",
-          city: 'selectedLocation.city',
-          state: 'selectedLocation.state',
-          country: 'selectedLocation.country',
+          city: selectedLocation.city,
+          state: selectedLocation.state,
+          country: selectedLocation.country,
           onSuccess: (res) => {
             toast.success("User Register Successfully.");
             loadUpdateUserData(res.data);
@@ -441,9 +441,9 @@ const UserRegister = () => {
         profile: image,
         fcm_id: FcmToken,
         notification: "1",
-        city: 'selectedLocation.city',
-        state: 'selectedLocation.state',
-        country: 'selectedLocation.country',
+        city: selectedLocation.city,
+        state: selectedLocation.state,
+        country: selectedLocation.country,
         onSuccess: (res) => {
           toast.success("User Register Successfully.");
           loadUpdateUserData(res.data);
