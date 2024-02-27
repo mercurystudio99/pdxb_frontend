@@ -30,6 +30,7 @@ import AdminFooter from "./AdminFooter.jsx";
 import ebroker from "@/assets/Logo_Color.png";
 import Link from "next/link";
 import TagFacesOutlinedIcon from "@mui/icons-material/TagFacesOutlined";
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { translate } from "@/utils/index.js";
 import { logoutSuccess } from "@/store/reducer/authSlice.js";
@@ -688,6 +689,44 @@ export default function VerticleLayout(props) {
                 </ListItemIcon>
                 <ListItemText
                   primary={translate("myProfile")}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link href="/user/agents">
+            <ListItem
+              disablePadding
+              sx={{ display: "block" }}
+              className={
+                isRouteActive("/user/agents")
+                  ? "drawer_list_item_active"
+                  : "drawer_list_item"
+              }
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 30,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  className={
+                    isRouteActive("/user/agents")
+                      ? "drawer_list_icon_active"
+                      : "drawer_list_icon"
+                  }
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <GroupOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={translate("myAgents")}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
