@@ -16,19 +16,20 @@ const CustomDocument = () => {
                 <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css" />
                 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-7KSZ2Z3CXG"></script>
-                <script id="google-analytics">
+                {/* <script async src="https://www.googletagmanager.com/gtag/js?id=G-7KSZ2Z3CXG"></script> */}
+                {/* <script id="google-analytics">
                     {`
                         window.dataLayer = window.dataLayer || [];
                         function gtag(){dataLayer.push(arguments);}
                         gtag('js', new Date());
                         gtag('config', 'G-7KSZ2Z3CXG');
                     `}
-                </script>
+                </script> */}
             </Head>
 
             <body>
-                <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TH8N2TKB" height="0" width="0" style={{display: "none", visibility: 'hidden'}}></iframe></noscript>
+                <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TH8N2TKB" height="0" width="0" style={{display: "none", visibility: 'hidden'}}></iframe>
+                {/* <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TH8N2TKB" height="0" width="0" style={{display: "none", visibility: 'hidden'}}></iframe></noscript> */}
                 <Main />
                 <NextScript />
                 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>

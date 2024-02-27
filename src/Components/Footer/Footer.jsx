@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import eBroker from "@/assets/Logo_Color.png";
 import { FiMail, FiPhone } from "react-icons/fi";
 import { AiFillTwitterCircle, AiOutlineInstagram, AiOutlineLinkedin } from "react-icons/ai";
@@ -9,15 +9,29 @@ import appstore from "../../assets/appStore.png";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { settingsData } from "@/store/reducer/settingsSlice";
+import { userSignUpData } from "@/store/reducer/authSlice";
 import { translate } from "@/utils";
+import LoginOptionsModal from "../LoginOptionsModal/LoginOptionsModal";
 
 import Image from "next/image";
 
 const Footer = () => {
+    const [showModal, setShowModal] = useState(false);
+    const signupData = useSelector(userSignUpData);
     const systemData = useSelector(settingsData);
     const webdata = systemData && systemData;
     const currentYear = new Date().getFullYear();
+
+    const handleOpenModal = () => {
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+    
     return (
+        <>
         <section id="footer">
             <div className="container">
                 <div className="row py-5" id="footer_deatils">
@@ -144,6 +158,20 @@ const Footer = () => {
                             <div className="page_links">
                                 <Link href="/privacy-policy">{translate("privacyPolicy")}</Link>
                             </div>
+
+                            <div className="page_links">
+                            {
+                                signupData?.data === null && (
+                                    <a
+                                        className="nav-link"
+                                        to="/"
+                                        onClick={handleOpenModal}
+                                    >
+                                        {translate("agency")}
+                                    </a>
+                                )
+                            }
+                            </div>
                         </div>
                     </div>
                     <div className="col-12 col-md-6 col-lg-3">
@@ -180,6 +208,8 @@ const Footer = () => {
                 <h6>{translate("Copyright")} {currentYear} {webdata?.company_name} {translate("All Rights Reserved")}</h6>
             </div>
         </section>
+        <LoginOptionsModal isOpen={showModal} onClose={handleCloseModal} />
+        </>
     );
 };
 

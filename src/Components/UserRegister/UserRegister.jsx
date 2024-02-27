@@ -522,7 +522,7 @@ const UserRegister = () => {
 
                           <div className="col-sm-12 col-md-6">
                             <div className="user_fields">
-                              <span>{translate("userName")}</span>
+                              <span>{translate("agencyName")}</span>
                               <input
                                 type="text"
                                 name="uname"

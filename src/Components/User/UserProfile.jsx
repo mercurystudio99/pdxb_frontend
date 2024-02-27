@@ -197,7 +197,7 @@ const UserProfile = () => {
     <VerticleLayout>
       <div className="container">
         <div className="dashboard_titles">
-          <h3>{translate("myProfile")}</h3>
+          <h3>{translate("agencyProfile")}</h3>
         </div>
         <div className="profile_card">
           <form>
@@ -236,18 +236,20 @@ const UserProfile = () => {
                               {translate("uploadImg")}
                             </button>
 
+                            <span className="mx-2">{translate("agencyLogo")}</span>
+
                             <p>{translate("Note:")}</p>
                           </div>
                         </div>
                       </div>
                       <div className="col-sm-12 col-md-6">
                         <div className="add_user_fields_div">
-                          <span>{translate("fullName")}</span>
+                          <span>{translate("companyName")}</span>
                           <input
                             type="text"
                             className="add_user_fields"
                             name="fullName"
-                            placeholder="Enter Full Name"
+                            placeholder="Enter Your Company Name"
                             value={formData.fullName}
                             onChange={handleInputChange}
                           />
@@ -274,7 +276,7 @@ const UserProfile = () => {
                             type="text"
                             className="add_user_fields"
                             name="whatsappNumber"
-                            placeholder="Enter Whatsapp Number"
+                            placeholder="9715xxxxxxxx"
                             value={formData.whatsappNumber}
                             onChange={handleInputChange}
                           />
@@ -302,7 +304,7 @@ const UserProfile = () => {
                             type="text"
                             className="add_user_fields"
                             name="phoneNumber"
-                            placeholder="Enter Phone Number"
+                            placeholder="971xxxxxxxxx"
                             value={formData.phoneNumber}
                             onChange={handlePhoneNumberChange}
                           />
@@ -339,16 +341,16 @@ const UserProfile = () => {
               <div className="col-sm-12 col-md-6">
                 <div className="card" id="about_me_card">
                   <div className="card-header">
-                    <h4>{translate("aboutMe")}</h4>
+                    <h4>{translate("about")}</h4>
                   </div>
                   <div className="card-body">
                     <div className="add_user_fields_div">
-                      <span>{translate("aboutMe")}</span>
+                      <span>{translate("about")}</span>
                       <textarea
                         rows={17}
                         className="add_user_fields"
                         name="aboutMe"
-                        placeholder="Tell us about yourself..."
+                        placeholder="Tell us about your Agency"
                         value={formData.aboutMe}
                         onChange={handleInputChange}
                       />
