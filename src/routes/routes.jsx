@@ -24,6 +24,7 @@ export const isSubscribeRoutes = [
   "/user/dashboard/",
   "/user/advertisement/",
   "/user/properties/",
+  "/user/agents/",
   "/user/subscription/",
   "/user/transaction-history/",
 ];

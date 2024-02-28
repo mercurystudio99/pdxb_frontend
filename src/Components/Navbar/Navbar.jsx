@@ -390,16 +390,17 @@ const Nav = () => {
                   <li className="nav-item">
                     {
                       // Check if signupData.data is null
-                      signupData?.data === null ? (
-                        <a
-                          className="nav-link"
-                          to="/"
-                          onClick={handleOpenModal}
-                        >
-                          <RiUserSmileLine size={20} className="icon" />
-                          {translate("login&Regiser")}
-                        </a>
-                      ) : // Check if mobile and firebase_id are present
+                      // signupData?.data === null ? (
+                      //   <a
+                      //     className="nav-link"
+                      //     to="/"
+                      //     onClick={handleOpenModal}
+                      //   >
+                      //     <RiUserSmileLine size={20} className="icon" />
+                      //     {translate("login&Regiser")}
+                      //   </a>
+                      // ) : 
+                      // Check if mobile and firebase_id are present
                       signupData?.data?.data.mobile &&
                         signupData?.data?.data.firebase_id &&
                         signupData?.data?.data.name === "" ? (
@@ -603,12 +604,13 @@ const Nav = () => {
                 <li className="nav-item">
                   {
                     // Check if signupData.data is null
-                    signupData?.data === null ? (
-                      <a className="nav-link" to="/" onClick={handleOpenModal}>
-                        <RiUserSmileLine size={20} className="icon" />
-                        {translate("login&Regiser")}
-                      </a>
-                    ) : // Check if mobile and firebase_id are present
+                    // signupData?.data === null ? (
+                    //   <a className="nav-link" to="/" onClick={handleOpenModal}>
+                    //     <RiUserSmileLine size={20} className="icon" />
+                    //     {translate("login&Regiser")}
+                    //   </a>
+                    // ) : 
+                    // Check if mobile and firebase_id are present
                     signupData?.data?.data.mobile &&
                       signupData?.data?.data.firebase_id &&
                       signupData?.data?.data.name === "" ? (
