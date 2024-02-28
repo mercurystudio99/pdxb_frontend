@@ -15,6 +15,8 @@ import {
   getFacilities,
   postProperty,
   getLimits,
+  postAgentProfile,
+  getAgentProfile,
   getPaymentDetials,
   updatePostProperty,
   deleteProperty,
@@ -426,6 +428,54 @@ export const PostProperty = (
     })
   );
 };
+
+// post agent profile
+export const PostAgentProfile = (
+  id,
+  name,
+  email,
+  phone,
+  whatsapp,
+  profile,
+  review,
+  agency_id,
+  onSuccess,
+  onError,
+  onStart
+) => {
+  store.dispatch(
+    apiCallBegan({
+      ...postAgentProfile(
+        id,
+        name,
+        email,
+        phone,
+        whatsapp,
+        profile,
+        review,
+        agency_id
+      ),
+      displayToast: false,
+      onStart,
+      onSuccess,
+      onError,
+    })
+  );
+};
+
+// GET AGENT
+export const GetAgentProfile = (id, onSuccess, onError, onStart) => {
+  store.dispatch(
+    apiCallBegan({
+      ...getAgentProfile(id),
+      displayToast: false,
+      onStart,
+      onSuccess,
+      onError,
+    })
+  );
+};
+
 // GET LIMITS API
 export const GetLimitsApi = (id, onSuccess, onError, onStart) => {
   store.dispatch(

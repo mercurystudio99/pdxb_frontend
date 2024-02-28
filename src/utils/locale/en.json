@@ -11,6 +11,7 @@
   "subject": "Subject",
   "message": "Message",
   "submit": "Submit",
+  "save": "Save",
   "featurdAllProp": "Featured All Properties",
   "allAgents": "All Agents",
   "featuredProp": "Featured Properties",
@@ -307,5 +308,12 @@
   "dontHaveAccount": "Don't have an account?",
   "alreadyHaveAccount": "Already have an account?",
   "changePassword": "Change Password",
-  "oldpassword": "Old Password"
+  "oldpassword": "Old Password",
+  "agentProfile": "Agent Profile",
+  "agentInfo": "Agent Information",
+  "agentLogo": "Agent Logo",
+  "agentName": "Agent Name",
+  "review": "Review",
+  "noReview": "No reviews",
+  "writeReview": "Write a review"
 }

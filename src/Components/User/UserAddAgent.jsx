@@ -3,22 +3,11 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic.js";
 import { useRef } from "react";
 import { useSelector } from "react-redux";
-import { Fcmtoken, settingsData } from "@/store/reducer/settingsSlice";
-import LocationSearchBox from "@/Components/Location/LocationSearchBox";
-import { UpdateProfileApi } from "@/store/actions/campaign";
-import { loadUpdateUserData } from "@/store/reducer/authSlice";
-import { useRouter } from "next/router";
+import { settingsData } from "@/store/reducer/settingsSlice";
 import toast from "react-hot-toast";
 import { translate } from "@/utils";
 import { languageData } from "@/store/reducer/languageSlice";
 import Image from "next/image";
-import FirebaseData from "@/utils/Firebase.js";
-import {
-  updateEmail,
-  EmailAuthProvider,
-  signInWithEmailAndPassword,
-  updatePassword
-} from "firebase/auth";
 const VerticleLayout = dynamic(
   () => import("../../../src/Components/AdminLayout/VerticleLayout.jsx"),
   { ssr: false }
@@ -27,37 +16,24 @@ const VerticleLayout = dynamic(
 const UserAddAgent = () => {
   const userData = useSelector((state) => state.User_signup);
   const userProfileData = userData?.data?.data;
-  const navigate = useRouter();
-  const FcmToken = useSelector(Fcmtoken);
-  const { authentication } = FirebaseData();
-  const [oldPassword, setOldPassword] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [formData, setFormData] = useState({
-    fullName: userProfileData?.name ?? "",
-    email: userProfileData?.email ?? "",
-    phoneNumber: userProfileData?.mobile ?? "",
-    address: userProfileData?.address ?? "",
-    aboutMe: userProfileData?.about_me ?? "",
-    facebook: userProfileData?.facebook_id ?? "",
-    instagram: userProfileData?.instagram_id ?? "",
-    pintrest: userProfileData?.pintrest_id ?? "",
-    twiiter: userProfileData?.twiiter_id ?? "",
-    profileImage: userProfileData?.profile ?? "",
-    whatsappNumber: userProfileData?.whatsapp_number ?? "",
-    brokerOrnNumber: userProfileData?.orn_number ?? "",
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    review: "",
+    profileImage: "",
+    whatsappNumber: "",
   });
   const fileInputRef = useRef(null);
 
-  const [uploadedImage, setUploadedImage] = useState(
-    userProfileData?.profile || null
-  );
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   const lang = useSelector(languageData);
 
   useEffect(() => {}, [lang]);
   const DummyImgData = useSelector(settingsData);
   const PlaceHolderImg = DummyImgData?.web_placeholder_logo;
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
 
@@ -83,13 +59,6 @@ const UserAddAgent = () => {
     fileInputRef.current.click(); // Trigger the file input click event
   };
 
-  const handleLocationSelected = (locationData) => {
-    setFormData({
-      ...formData,
-      selectedLocation: locationData,
-    });
-  };
-
   const handlePhoneNumberChange = (e) => {
     const value = e.target.value;
     if (/^\d*$/.test(value)) {
@@ -97,115 +66,79 @@ const UserAddAgent = () => {
     }
   };
 
-  const isLoggedIn = useSelector((state) => state.User_signup);
-  const userCurrentId =
-    isLoggedIn && isLoggedIn.data ? isLoggedIn.data.data.id : null;
-  const handleUpdateProfile = (e) => {
-    e.preventDefault();
-    UpdateProfileApi({
-      userid: userCurrentId,
-      name: formData.fullName,
-      email: formData.email,
-      mobile: formData.phoneNumber,
-      address: formData.address,
-      profile: formData.profileImage,
-      latitude: formData.selectedLocation?.lat,
-      longitude: formData.selectedLocation?.lng,
-      about_me: formData.aboutMe ? formData.aboutMe : "",
-      facebook_id: formData.facebook ? formData.facebook : "",
-      twiiter_id: formData.twiiter ? formData.twiiter : "",
-      instagram_id: formData.instagram ? formData.instagram : "",
-      pintrest_id: formData.pintrest ? formData.pintrest : "",
-      fcm_id: FcmToken,
-      notification: "1",
-      city: formData.selectedLocation?.city,
-      state: formData.selectedLocation?.state,
-      country: formData.selectedLocation?.country,
-      ornNumber: formData.brokerOrnNumber,
-      whatsappNumber: formData.whatsappNumber,
-      onSuccess: (response) => {
-        toast.success("Profile Updated Successfully");
-        loadUpdateUserData(response.data);
-        navigate.push("/");
-        setFormData({
-          fullName: "",
-          email: "",
-          phoneNumber: "",
-          address: "",
-          aboutMe: "",
-          facebook: "",
-          instagram: "",
-          pintrest: "",
-          twiiter: "",
-        });
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
-    updateEmail(authentication.currentUser, formData.email);
-  };
-  const handleUpdatePassword = (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
 
-    if (password === "") {
-      toast.error("Please Enter Password");
-      return;
-    }
-    if (confirmPassword === "") {
-      toast.error("Please Enter Confirm Password");
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast.error("Password and Confirm Password not match");
-      return;
-    }
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
-    }
-
-    const emailCred = EmailAuthProvider.credential(
-      authentication.currentUser,
-      oldPassword
-    );
-    signInWithEmailAndPassword(
-      authentication,
-      userProfileData.email,
-      oldPassword
-    )
-      .then(() => {
-        updatePassword(authentication.currentUser, password)
-          .then(() => {
-            toast.success("Password Updated Successfully");
-            navigate.push("/");
-          })
-          .catch((error) => {
-            console.log(error);
-            toast.error(error.message);
-          });
-      })
-      .catch((error) => {
-        if (error.code === "auth/wrong-password") {
-          toast.error("The old password is wrong.");
+    try {
+      PostAgentProfile(
+        0,
+        formData.fullName,
+        formData.email,
+        formData.phoneNumber,
+        formData.whatsappNumber,
+        formData.profileImage,
+        formData.review,
+        userProfileData?.id,
+        async (response) => {
+          console.log(response);
+          // if (response.message === "Package not found") {
+          //   toast.error(response.message);
+          //   await Swal.fire({
+          //     icon: "error",
+          //     title: "Oops...",
+          //     text: "You have not subscribed. Please subscribe first",
+          //   });
+          //   router.push("/subscription-plan"); // Redirect to the subscription page
+          // } else if (response.message === "Package Limit is over") {
+          //   await Swal.fire({
+          //     icon: "error",
+          //     title: "Oops...",
+          //     text: "Your Package Limit is Over. Please Purchase Package.",
+          //     customClass: {
+          //       confirmButton: "Swal-buttons",
+          //     },
+          //   });
+          //   router.push("/subscription-plan"); // Redirect to the subscription page
+          // } else if (
+          //   response.message === "Package not found for add property"
+          // ) {
+          //   await Swal.fire({
+          //     icon: "error",
+          //     title: "Oops...",
+          //     text: "Package not found for add property. Please Purchase Package.",
+          //     customClass: {
+          //       confirmButton: "Swal-buttons",
+          //     },
+          //   });
+          //   router.push("/subscription-plan"); // Redirect to the subscription page
+          // } else {
+          //   toast.success(response.message);
+          //   router.push("/user/dashboard");
+          // }
+        },
+        (error) => {
+          toast.error(error);
         }
-        toast.error(error.message);
-      });
+      );
+    } catch (error) {
+      console.log("An error occurred:", error);
+      toast.error("An error occurred. Please try again later.");
+    }
   };
-
+  
   return (
     <VerticleLayout>
       <div className="container">
         <div className="dashboard_titles">
-          <h3>{translate("agencyProfile")}</h3>
+          <h3>{translate("agentProfile")}</h3>
         </div>
         <div className="profile_card">
           <form>
             <div className="row">
-              <div className="col-sm-12 col-md-6">
+              <div className="col-12">
                 <div className="card" id="personal_info_card">
                   <div className="card-header">
-                    <h4>{translate("personalInfo")}</h4>
+                    <h4>{translate("agentInfo")}</h4>
                   </div>
                   <div className="card-body">
                     <div className="row">
@@ -236,7 +169,7 @@ const UserAddAgent = () => {
                               {translate("uploadImg")}
                             </button>
 
-                            <span className="mx-2">{translate("agencyLogo")}</span>
+                            <span className="mx-2">{translate("agentLogo")}</span>
 
                             <p>{translate("Note:")}</p>
                           </div>
@@ -244,12 +177,12 @@ const UserAddAgent = () => {
                       </div>
                       <div className="col-sm-12 col-md-6">
                         <div className="add_user_fields_div">
-                          <span>{translate("companyName")}</span>
+                          <span>{translate("agentName")}</span>
                           <input
                             type="text"
                             className="add_user_fields"
                             name="fullName"
-                            placeholder="Enter Your Company Name"
+                            placeholder="Enter Your Agent Name"
                             value={formData.fullName}
                             onChange={handleInputChange}
                           />
@@ -268,7 +201,6 @@ const UserAddAgent = () => {
                           />
                         </div>
                       </div>
-                      {/** */}
                       <div className="col-sm-12 col-md-6">
                         <div className="add_user_fields_div">
                           <span>{translate("whatsapp")}</span>
@@ -285,19 +217,6 @@ const UserAddAgent = () => {
 
                       <div className="col-sm-12 col-md-6">
                         <div className="add_user_fields_div">
-                          <span>{translate("ornNumber")}</span>
-                          <input
-                            type="text"
-                            className="add_user_fields"
-                            name="brokerOrnNumber"
-                            placeholder="Enter Brocker ORN Number"
-                            value={formData.brokerOrnNumber}
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-12 col-md-6">
-                        <div className="add_user_fields_div">
                           <span>{translate("phoneNumber")}</span>
                           <input
                             readOnly
@@ -310,176 +229,28 @@ const UserAddAgent = () => {
                           />
                         </div>
                       </div>
-                      <div className="col-sm-12 col-md-6">
-                        <div className="add_user_fields_div">
-                          <span>{translate("location")}</span>
-
-                          <LocationSearchBox
-                            onLocationSelected={handleLocationSelected}
-                            initialLatitude={userProfileData?.latitude}
-                            initialLongitude={userProfileData?.longitude}
-                          />
-                        </div>
-                      </div>
                       <div className="col-sm-12">
                         <div className="add_user_fields_div">
-                          <span>{translate("address")}</span>
+                          <span>{translate("review")}</span>
                           <textarea
                             rows={4}
                             className="add_user_fields"
-                            name="address"
-                            placeholder="Enter Address"
-                            value={formData.address}
+                            name="review"
+                            placeholder="Write a review"
+                            value={formData.review}
                             onChange={handleInputChange}
                           />
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-12 col-md-6">
-                <div className="card" id="about_me_card">
-                  <div className="card-header">
-                    <h4>{translate("about")}</h4>
-                  </div>
-                  <div className="card-body">
-                    <div className="add_user_fields_div">
-                      <span>{translate("about")}</span>
-                      <textarea
-                        rows={17}
-                        className="add_user_fields"
-                        name="aboutMe"
-                        placeholder="Tell us about your Agency"
-                        value={formData.aboutMe}
-                        onChange={handleInputChange}
-                      />
                     </div>
                   </div>
                 </div>
               </div>
               <div className="col-12">
-                <div className="card" id="social_media_card">
-                  <div className="card-header">
-                    <h4>{translate("socialMedia")}</h4>
-                  </div>
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-sm-12 col-md-6">
-                        <div className="add_user_fields_div">
-                          <span>{translate("facebook")}</span>
-                          <input
-                            type="text"
-                            className="add_user_fields"
-                            name="facebook"
-                            placeholder="Enter Facebook URL"
-                            value={formData.facebook}
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-12 col-md-6">
-                        <div className="add_user_fields_div">
-                          <span>{translate("insta")}</span>
-                          <input
-                            type="text"
-                            className="add_user_fields"
-                            name="instagram"
-                            placeholder="Enter Instagram URL"
-                            value={formData.instagram}
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-12 col-md-6">
-                        <div className="add_user_fields_div">
-                          <span>{translate("pinterest")}</span>
-                          <input
-                            type="text"
-                            className="add_user_fields"
-                            name="pintrest"
-                            placeholder="Enter Pinterest URL"
-                            value={formData.pintrest}
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-12 col-md-6">
-                        <div className="add_user_fields_div">
-                          <span>{translate("twitter")}</span>
-                          <input
-                            type="text"
-                            className="add_user_fields"
-                            name="twiiter"
-                            placeholder="Enter LinkedIn URL"
-                            value={formData.twiiter}
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-12">
-                  <div className="submit_div">
-                    <button type="submit" onClick={handleUpdateProfile}>
-                      {translate("updateProfile")}
+                <div className="submit_div">
+                    <button type="submit" onClick={handleSaveProfile}>
+                      {translate("save")}
                     </button>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="card" id="personal_pass_card">
-                  <div className="card-body">
-                    <div className="row">
-                      {/** */}
-                      <div className="col-sm-12 col-md-6">
-                        <div className="add_user_fields_div">
-                          <span>{translate("oldpassword")}</span>
-                          <input
-                            type="password"
-                            name="oldpassword"
-                            placeholder="Enter Your old Password"
-                            value={oldPassword}
-                            onChange={(e) => setOldPassword(e.target.value)}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-12 col-md-6">
-                        <div className="add_user_fields_div">
-                          <span>{translate("password")}</span>
-                          <input
-                            type="password"
-                            name="password"
-                            placeholder="Enter Your New Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-12 col-md-6">
-                        <div className="add_user_fields_div">
-                          <span>{translate("confirmationPassword")}</span>
-                          <input
-                            type="password"
-                            name="confirmPassword"
-                            placeholder="Enter Your Confirmation Password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-12 mt-5">
-                      <div className="col-12">
-                        <div className="submit_div">
-                          <button type="submit" onClick={handleUpdatePassword}>
-                            {translate("changePassword")}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

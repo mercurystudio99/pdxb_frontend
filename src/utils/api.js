@@ -19,6 +19,9 @@ export const CONFIRMPAYMENT = "confirmPayment";
 export const POST_PROPERTY = "post_property";
 export const GET_FACILITITES = "get_facilities";
 export const GET_LIMITS = "get_limits";
+export const GET_ALL_AGENTS = "get_all_agents";
+export const GET_AGENT = "get_agent";
+export const POST_AGENT = "post_agent";
 export const GET_PAYMENT_DETAILS = "get_payment_details";
 export const UPDATE_POST_PROPERTY = "update_post_property";
 export const DELETE_PROPERTY = "delete_property";
@@ -764,5 +767,93 @@ export const getNearbyProperties = (city, state, type) => {
       type: type,
     },
     authorizationHeader: false,
+  };
+};
+
+// GET ALL AGENTS
+export const getAllAgents = () => {
+  return {
+    url: `${GET_ALL_AGENTS}`,
+    method: "GET",
+    params: {},
+    authorizationHeader: false,
+  };
+};
+
+// GET AGENT BY ID
+export const getAgentProfile = (id) => {
+  return {
+    url: `${GET_AGENT}`,
+    method: "GET",
+    params: {
+      id: id,
+    },
+    authorizationHeader: true,
+  };
+};
+
+// POST AGENT
+export const postAgentProfile = (
+  id,
+  name,
+  email,
+  phone,
+  whatsapp,
+  profile,
+  review,
+  agency_id
+) => {
+  let data = new FormData();
+
+  // Append the property data to the FormData object
+  // data.append("userid", userid);
+  // data.append("package_id", package_id);
+  // data.append("title", title);
+  // data.append("description", description);
+  // data.append("city", city);
+  // data.append("state", state);
+  // data.append("country", country);
+  // data.append("latitude", latitude);
+  // data.append("longitude", longitude);
+  // data.append("address", address);
+  // data.append("price", price);
+  // data.append("category_id", category_id);
+  // data.append("property_type", property_type);
+  // data.append("video_link", video_link);
+  // data.append("meta_title", meta_title);
+  // data.append("meta_description", meta_description);
+  // data.append("meta_keywords", meta_keywords);
+  // data.append("meta_image", meta_image);
+  // data.append("rentduration", rentduration);
+  // data.append("dld_permit_number", dldPermitNumber);
+  // // Append the parameters array if it is an array
+  // if (Array.isArray(parameters)) {
+  //   parameters.forEach((parameter, index) => {
+  //     data.append(`parameters[${index}][parameter_id]`, parameter.parameter_id);
+  //     data.append(`parameters[${index}][value]`, parameter.value);
+  //   });
+  // }
+  // // Append the facilities array if it is an array
+  // if (Array.isArray(facilities)) {
+  //   facilities.forEach((facility, index) => {
+  //     data.append(`facilities[${index}][facility_id]`, facility.facility_id);
+  //     data.append(`facilities[${index}][distance]`, facility.distance);
+  //   });
+  // }
+  // data.append("title_image", title_image);
+  // data.append("threeD_image", threeD_image);
+
+  // // Check if gallery_images is defined and an array before using forEach
+  // if (Array.isArray(gallery_images)) {
+  //   gallery_images.forEach((image, index) => {
+  //     data.append(`gallery_images[${index}]`, image);
+  //   });
+  // }
+
+  return {
+    url: `${POST_AGENT}`,
+    method: "POST",
+    data,
+    authorizationHeader: true,
   };
 };
