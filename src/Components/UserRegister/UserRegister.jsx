@@ -397,22 +397,46 @@ const UserRegister = () => {
       //   });
     }
     if (!signupData.data?.data?.mobile && signupData.data?.data?.email) {
-      let appVerifier = window.recaptchaVerifier;
-      let mobile = phone;
-      const provider = new PhoneAuthProvider(authentication);
-      provider.verifyPhoneNumber(mobile, appVerifier).then((verificationId) => {
-        console.log(verificationId)
-        setVerificationID(verificationId);
-        setShowOtpModal(true);
-      }).catch((error) => {
-        if (error.code === "auth/invalid-app-credential") {
-          toast.error("Sorry. please try again.");
-        } else if (error.code === "auth/too-many-requests") {
-          toast.error("Too many requests. Please try again later.");
-        }
-        const errorMessage = error.message;
-        toast.error(errorMessage);  
+      UpdateProfileApi({
+        userid: signupData.data.data.id,
+        name: username,
+        email: signupData.data?.data?.email ?? "",
+        mobile: phone.replace("+", ""),
+        type: "3",
+        address: address,
+        firebase_id: signupData.data.data.firebase_id,
+        logintype: "email",
+        profile: image,
+        fcm_id: FcmToken,
+        notification: "1",
+        city: selectedLocation.city,
+        state: selectedLocation.state,
+        country: selectedLocation.country,
+        onSuccess: (res) => {
+          toast.success("User Register Successfully.");
+          loadUpdateUserData(res.data);
+          navigate.push("/");
+        },
+        onError: (err) => {
+          toast.error(err.message);
+        },
       });
+      // let appVerifier = window.recaptchaVerifier;
+      // let mobile = phone;
+      // const provider = new PhoneAuthProvider(authentication);
+      // provider.verifyPhoneNumber(mobile, appVerifier).then((verificationId) => {
+      //   console.log(verificationId)
+      //   setVerificationID(verificationId);
+      //   setShowOtpModal(true);
+      // }).catch((error) => {
+      //   if (error.code === "auth/invalid-app-credential") {
+      //     toast.error("Sorry. please try again.");
+      //   } else if (error.code === "auth/too-many-requests") {
+      //     toast.error("Too many requests. Please try again later.");
+      //   }
+      //   const errorMessage = error.message;
+      //   toast.error(errorMessage);  
+      // });
     }
   };
 
