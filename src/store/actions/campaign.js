@@ -19,6 +19,7 @@ import {
   updatePostAgentProfile,
   deleteAgentProfile,
   getAgentProfile,
+  getAgentsList,
   getPaymentDetials,
   updatePostProperty,
   deleteProperty,
@@ -518,6 +519,32 @@ export const GetAgentProfile = (id, onSuccess, onError, onStart) => {
   store.dispatch(
     apiCallBegan({
       ...getAgentProfile(id),
+      displayToast: false,
+      onStart,
+      onSuccess,
+      onError,
+    })
+  );
+};
+
+// GET AGENTS LIST
+export const GetAgentList = ({
+  id = "",
+  agency_id = "",
+  offset = "",
+  limit = "",
+  onSuccess = () => {},
+  onError = () => {},
+  onStart = () => {},
+}) => {
+  store.dispatch(
+    apiCallBegan({
+      ...getAgentsList(
+        id,
+        agency_id,
+        offset,
+        limit,
+      ),
       displayToast: false,
       onStart,
       onSuccess,

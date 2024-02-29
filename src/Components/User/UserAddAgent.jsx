@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { settingsData } from "@/store/reducer/settingsSlice";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 import { translate } from "@/utils";
 import { languageData } from "@/store/reducer/languageSlice";
 import { PostAgentProfile } from "@/store/actions/campaign";
@@ -15,6 +16,7 @@ const VerticleLayout = dynamic(
 );
 
 const UserAddAgent = () => {
+  const router = useRouter();
   const userData = useSelector((state) => state.User_signup);
   const userProfileData = userData?.data?.data;
   const [formData, setFormData] = useState({
@@ -82,40 +84,12 @@ const UserAddAgent = () => {
         userProfileData?.id,
         async (response) => {
           console.log(response);
-          // if (response.message === "Package not found") {
-          //   toast.error(response.message);
-          //   await Swal.fire({
-          //     icon: "error",
-          //     title: "Oops...",
-          //     text: "You have not subscribed. Please subscribe first",
-          //   });
-          //   router.push("/subscription-plan"); // Redirect to the subscription page
-          // } else if (response.message === "Package Limit is over") {
-          //   await Swal.fire({
-          //     icon: "error",
-          //     title: "Oops...",
-          //     text: "Your Package Limit is Over. Please Purchase Package.",
-          //     customClass: {
-          //       confirmButton: "Swal-buttons",
-          //     },
-          //   });
-          //   router.push("/subscription-plan"); // Redirect to the subscription page
-          // } else if (
-          //   response.message === "Package not found for add property"
-          // ) {
-          //   await Swal.fire({
-          //     icon: "error",
-          //     title: "Oops...",
-          //     text: "Package not found for add property. Please Purchase Package.",
-          //     customClass: {
-          //       confirmButton: "Swal-buttons",
-          //     },
-          //   });
-          //   router.push("/subscription-plan"); // Redirect to the subscription page
-          // } else {
-          //   toast.success(response.message);
-          //   router.push("/user/dashboard");
-          // }
+          if (response.data === "success") {
+            toast.success(response.message);
+            router.push("/user/agents");
+          } else {
+            toast.error(response.message);
+          }
         },
         (error) => {
           toast.error(error);

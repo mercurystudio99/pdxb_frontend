@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { GetFeturedListingsApi } from "@/store/actions/campaign";
+import { DeleteAgentProfile, GetAgentList } from "@/store/actions/campaign";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,16 +11,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Menu, Dropdown, Button, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { settingsData } from "@/store/reducer/settingsSlice";
 import { useRouter } from "next/router";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ReactPagination from "../Pagination/ReactPagination.jsx";
-import { deletePropertyApi } from "@/store/actions/campaign";
 import Loader from "../Loader/Loader.jsx";
 import toast from "react-hot-toast";
 import { translate } from "@/utils/index.js";
 import { languageData } from "@/store/reducer/languageSlice.js";
-import Swal from "sweetalert2";
 import Image from "next/image";
 import dynamic from "next/dynamic.js";
 
@@ -30,17 +27,14 @@ const UserAgents = () => {
 
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [getFeaturedListing, setGetFeaturedListing] = useState([]);
+    const [agentList, setAgentList] = useState([]);
     const [total, setTotal] = useState(0);
-    const [view, setView] = useState(0);
     const [offsetdata, setOffsetdata] = useState(0);
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [propertyIdToDelete, setPropertyIdToDelete] = useState(null);
-    const [propertyId, setPropertyId] = useState(null);
-    const [isFeatureModalVisible, setIsFeatureModalVisible] = useState(false);
-
-    const SettingsData = useSelector(settingsData);
-
+    const [agentIdToDelete, setAgentIdToDelete] = useState(null);
+    const limit = 8;
+    const isLoggedIn = useSelector((state) => state.User_signup);
+    const userCurrentId = isLoggedIn && isLoggedIn.data ? isLoggedIn.data.data.id : null;
 
     const lang = useSelector(languageData);
 
@@ -52,46 +46,33 @@ const UserAgents = () => {
     const handleClickEdit = (agentId) => {
         router.push(`/user/edit-agent/${agentId}`);
     };
-    const handleClickDelete = (propertyId) => {
-        if (SettingsData.demo_mode === true) {
-            Swal.fire({
-                title: "Opps!",
-                text: "This Action is Not Allowed in Demo Mode",
-                icon: "warning",
-                showCancelButton: false,
-                customClass: {
-                    confirmButton: 'Swal-buttons',
-                },
-                cancelButtonColor: "#d33",
-                confirmButtonText: "OK",
-            });
-            return false;
-        }
-        setPropertyIdToDelete(propertyId);
+    const handleClickDelete = (agentId) => {
+        setAgentIdToDelete(agentId);
         setIsLoading(true);
-        deletePropertyApi(
-            propertyId,
+        DeleteAgentProfile(
+            agentId,
             (response) => {
                 setIsLoading(true);
-                toast.success(response.message);
-
-                GetFeturedListingsApi({
-                    offset: offsetdata.toString(),
-                    limit: limit.toString(),
-                    userid: isLoggedIn ? userCurrentId : "",
-                    onSuccess: (response) => {
-                        setTotal(response.total);
-                        setView(response.total_clicks);
-                        const FeaturedListingData = response.data;
-                        setIsLoading(false);
-                        setGetFeaturedListing(FeaturedListingData);
-                    },
-                    onError: (error) => {
-                        setIsLoading(false);
-                        console.log(error);
-                    }
+                if (response.error) {
+                    toast.error(response.message);
+                } else {
+                    toast.success(response.message);
+                    GetAgentList({
+                        offset: offsetdata.toString(),
+                        limit: limit.toString(),
+                        agency_id: isLoggedIn ? userCurrentId : "",
+                        onSuccess: (response) => {
+                            console.log(response);
+                            setTotal(response.total);
+                            setIsLoading(false);
+                            setAgentList(response.data);
+                        },
+                        onError: (error) => {
+                            setIsLoading(false);
+                            console.log(error);
+                        }
+                    });
                 }
-                );
             },
             (error) => {
                 setIsLoading(false);
@@ -100,36 +81,24 @@ const UserAgents = () => {
         );
     };
 
-    const limit = 8;
-
-    const priceSymbol = useSelector(settingsData);
-    const CurrencySymbol = priceSymbol && priceSymbol.currency_symbol;
-    const isLoggedIn = useSelector((state) => state.User_signup);
-    const userCurrentId = isLoggedIn && isLoggedIn.data ? isLoggedIn.data.data.id : null;
-    const userData = isLoggedIn && isLoggedIn?.data?.data?.name;
-
     useEffect(() => {
         setIsLoading(true);
-        GetFeturedListingsApi({
+        GetAgentList({
             offset: offsetdata.toString(),
             limit: limit.toString(),
-            userid: isLoggedIn ? userCurrentId : "",
+            agency_id: isLoggedIn ? userCurrentId : "",
             onSuccess: (response) => {
+                console.log(response);
                 setTotal(response.total);
-                setView(response.total_clicks);
-                const FeaturedListingData = response.data;
                 setIsLoading(false);
-                setGetFeaturedListing(FeaturedListingData);
+                setAgentList(response.data);
             },
             onError: (error) => {
                 setIsLoading(false);
                 console.log(error);
             }
-        }
-        );
-    }, [offsetdata, isLoggedIn, propertyIdToDelete]);
-
-    useEffect(() => { }, [propertyId, propertyIdToDelete]);
+        });
+    }, [offsetdata, isLoggedIn, agentIdToDelete]);
 
     const handlePageChange = (selectedPage) => {
         const newOffset = selectedPage.selected * limit;
@@ -194,20 +163,20 @@ const UserAgents = () => {
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
-                                        ) : getFeaturedListing && getFeaturedListing.length > 0 ? (
-                                            getFeaturedListing.map((elem, index) => (
+                                        ) : agentList && agentList.length > 0 ? (
+                                            agentList.map((elem, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell component="th" scope="row">
                                                         <div className="card" id="listing_card">
                                                             <div className="listing_card_img">
-                                                                <Image loading="lazy" src={elem.title_image} alt="no_img" width={80} height={80} style={{ borderRadius: 80 }} />
+                                                                <Image loading="lazy" src={elem.profile_image} alt="no_img" width={80} height={80} style={{ borderRadius: 80 }} />
                                                             </div>
                                                         </div>
                                                     </TableCell>
-                                                    <TableCell align="center">{elem.category.category}</TableCell>
-                                                    <TableCell align="center">{elem.total_view}</TableCell>
-                                                    <TableCell align="center">{elem.post_created}</TableCell>
-                                                    <TableCell align="center">{elem.status === 1 ? <span className="active_status">{translate("active")}</span> : <span className="inactive_status">{translate("inactive")}</span>}</TableCell>
+                                                    <TableCell align="center">{elem.name}</TableCell>
+                                                    <TableCell align="center">{elem.phone}</TableCell>
+                                                    <TableCell align="center">{elem.whatsapp}</TableCell>
+                                                    <TableCell align="center">{elem.email}</TableCell>
                                                     <TableCell align="center">
                                                         <Dropdown
                                                             visible={anchorEl === index}
@@ -220,7 +189,7 @@ const UserAgents = () => {
                                                             }}
                                                             overlay={
                                                                 <Menu>
-                                                                    <Menu.Item key="edit" onClick={() => handleClickEdit(elem.slug_id)}>
+                                                                    <Menu.Item key="edit" onClick={() => handleClickEdit(elem.id)}>
                                                                         <Button type="text" icon={<EditOutlined />}>
                                                                             {translate("edit")}
                                                                         </Button>
@@ -251,7 +220,7 @@ const UserAgents = () => {
                                 </Table>
                             </TableContainer>
 
-                            {getFeaturedListing && getFeaturedListing.length > 0 ? (
+                            {agentList && agentList.length > 0 ? (
                                 <div className="col-12">
                                     <ReactPagination pageCount={Math.ceil(total / limit)} onPageChange={handlePageChange} />
                                 </div>

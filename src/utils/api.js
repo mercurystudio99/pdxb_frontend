@@ -19,7 +19,7 @@ export const CONFIRMPAYMENT = "confirmPayment";
 export const POST_PROPERTY = "post_property";
 export const GET_FACILITITES = "get_facilities";
 export const GET_LIMITS = "get_limits";
-export const GET_ALL_AGENTS = "get_all_agents";
+export const GET_AGENTS_LIST = "get_agents";
 export const GET_AGENT = "get_agent";
 export const POST_AGENT = "post_agent";
 export const UPDATE_POST_AGENT = "update_post_agent";
@@ -772,12 +772,22 @@ export const getNearbyProperties = (city, state, type) => {
   };
 };
 
-// GET ALL AGENTS
-export const getAllAgents = () => {
+// GET AGENTS LIST
+export const getAgentsList = (
+  id,
+  agency_id,
+  offset,
+  limit
+) => {
   return {
-    url: `${GET_ALL_AGENTS}`,
+    url: `${GET_AGENTS_LIST}`,
     method: "GET",
-    params: {},
+    params: {
+      id: id,
+      agency_id: agency_id,
+      offset: offset,
+      limit: limit,
+    },
     authorizationHeader: false,
   };
 };
