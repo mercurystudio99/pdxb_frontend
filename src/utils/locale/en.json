@@ -61,6 +61,7 @@
   "forRent": "For Rent",
   "propTypes": "Property Type",
   "selectPropType": "Select Property Type",
+  "selectAgent": "Select an Agent",
   "selectYourLocation": "Select Location (Optional)",
   "budget": "Budget(Price)",
   "postedSince": "Posted Since",
@@ -219,6 +220,7 @@
   "Note:": "Note: Photos must be JPEG or PNG format and at least 120x120",
   "fullName": "Full Name",
   "companyName": "Company Name",
+  "mainCompany": "Main Company",
   "aboutMe": "About Me",
   "about": "About",
   "socialMedia": "Social Media",
@@ -315,5 +317,6 @@
   "agentName": "Agent Name",
   "review": "Review",
   "noReview": "No reviews",
-  "writeReview": "Write a review"
+  "writeReview": "Write a review",
+  "agentChoose": "Choose an agent."
 }

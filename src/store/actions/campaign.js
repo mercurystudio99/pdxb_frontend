@@ -368,6 +368,8 @@ export const GetFacilitiesApi = (onSuccess, onError, onStart) => {
 export const PostProperty = (
   userid,
   package_id,
+  agentid,
+  agent_type,
   title,
   dldPermitNumber,
   description,
@@ -400,6 +402,8 @@ export const PostProperty = (
       ...postProperty(
         userid,
         package_id,
+        agentid,
+        agent_type,
         title,
         dldPermitNumber,
         description,

@@ -218,7 +218,6 @@ const UserEditAgent = () => {
                         <div className="add_user_fields_div">
                           <span>{translate("phoneNumber")}</span>
                           <input
-                            readOnly
                             type="text"
                             className="add_user_fields"
                             name="phoneNumber"

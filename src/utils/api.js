@@ -391,6 +391,8 @@ export const confirmPayment = (paymentIntentId) => {
 export const postProperty = (
   userid,
   package_id,
+  agentid,
+  agent_type,
   title,
   dldPermitNumber,
   description,
@@ -420,6 +422,8 @@ export const postProperty = (
   // Append the property data to the FormData object
   data.append("userid", userid);
   data.append("package_id", package_id);
+  data.append("agentid", agentid);
+  data.append("agent_type", agent_type);
   data.append("title", title);
   data.append("description", description);
   data.append("city", city);
