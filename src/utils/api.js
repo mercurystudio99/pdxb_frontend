@@ -22,6 +22,8 @@ export const GET_LIMITS = "get_limits";
 export const GET_ALL_AGENTS = "get_all_agents";
 export const GET_AGENT = "get_agent";
 export const POST_AGENT = "post_agent";
+export const UPDATE_POST_AGENT = "update_post_agent";
+export const DELETE_AGENT = "delete_agent";
 export const GET_PAYMENT_DETAILS = "get_payment_details";
 export const UPDATE_POST_PROPERTY = "update_post_property";
 export const DELETE_PROPERTY = "delete_property";
@@ -804,9 +806,40 @@ export const postAgentProfile = (
   agency_id
 ) => {
   let data = new FormData();
-
   // Append the property data to the FormData object
-  // data.append("userid", userid);
+  data.append("name", name);
+  data.append("email", email);
+  data.append("phone", phone);
+  data.append("whatsapp", whatsapp);
+  data.append("profile_image", profile);
+  data.append("review", review);
+  data.append("agency_id", agency_id);
+
+  return {
+    url: `${POST_AGENT}`,
+    method: "POST",
+    data,
+    authorizationHeader: true,
+  };
+};
+
+// UPDATE POST AGENT
+export const updatePostAgentProfile = (
+  action_type,
+  id,
+  name,
+  email,
+  phone,
+  whatsapp,
+  profile,
+  review,
+  agency_id
+) => {
+  let data = new FormData();
+
+  // // Append the property data to the FormData object
+  // data.append("action_type", action_type);
+  // data.append("id", id);
   // data.append("package_id", package_id);
   // data.append("title", title);
   // data.append("description", description);
@@ -820,11 +853,6 @@ export const postAgentProfile = (
   // data.append("category_id", category_id);
   // data.append("property_type", property_type);
   // data.append("video_link", video_link);
-  // data.append("meta_title", meta_title);
-  // data.append("meta_description", meta_description);
-  // data.append("meta_keywords", meta_keywords);
-  // data.append("meta_image", meta_image);
-  // data.append("rentduration", rentduration);
   // data.append("dld_permit_number", dldPermitNumber);
   // // Append the parameters array if it is an array
   // if (Array.isArray(parameters)) {
@@ -849,9 +877,28 @@ export const postAgentProfile = (
   //     data.append(`gallery_images[${index}]`, image);
   //   });
   // }
+  // data.append("slug_id", slug_id);
+  // data.append("meta_title", meta_title);
+  // data.append("meta_description", meta_description);
+  // data.append("meta_keywords", meta_keywords);
+  // data.append("meta_image", meta_image);
+  // data.append("rentduration", rentduration);
 
   return {
-    url: `${POST_AGENT}`,
+    url: `${UPDATE_POST_AGENT}`,
+    method: "POST",
+    data,
+    authorizationHeader: true,
+  };
+};
+
+// DELETE_AGENT
+export const deleteAgentProfile = (id) => {
+  let data = new FormData();
+  data.append("id", id);
+
+  return {
+    url: `${DELETE_AGENT}`,
     method: "POST",
     data,
     authorizationHeader: true,

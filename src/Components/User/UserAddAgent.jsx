@@ -7,6 +7,7 @@ import { settingsData } from "@/store/reducer/settingsSlice";
 import toast from "react-hot-toast";
 import { translate } from "@/utils";
 import { languageData } from "@/store/reducer/languageSlice";
+import { PostAgentProfile } from "@/store/actions/campaign";
 import Image from "next/image";
 const VerticleLayout = dynamic(
   () => import("../../../src/Components/AdminLayout/VerticleLayout.jsx"),
@@ -219,7 +220,6 @@ const UserAddAgent = () => {
                         <div className="add_user_fields_div">
                           <span>{translate("phoneNumber")}</span>
                           <input
-                            readOnly
                             type="text"
                             className="add_user_fields"
                             name="phoneNumber"

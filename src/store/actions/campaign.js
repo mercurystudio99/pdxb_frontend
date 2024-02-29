@@ -16,6 +16,8 @@ import {
   postProperty,
   getLimits,
   postAgentProfile,
+  updatePostAgentProfile,
+  deleteAgentProfile,
   getAgentProfile,
   getPaymentDetials,
   updatePostProperty,
@@ -455,6 +457,54 @@ export const PostAgentProfile = (
         review,
         agency_id
       ),
+      displayToast: false,
+      onStart,
+      onSuccess,
+      onError,
+    })
+  );
+};
+
+export const UpdatePostAgentProfile = (
+  action_type,
+  id,
+  name,
+  email,
+  phone,
+  whatsapp,
+  profile,
+  review,
+  agency_id,
+  onSuccess,
+  onError,
+  onStart
+) => {
+  store.dispatch(
+    apiCallBegan({
+      ...updatePostAgentProfile(
+        action_type,
+        id,
+        name,
+        email,
+        phone,
+        whatsapp,
+        profile,
+        review,
+        agency_id,
+      ),
+      displayToast: false,
+      onStart,
+      onSuccess,
+      onError,
+    })
+  );
+};
+
+// Delete Agent
+export const DeleteAgentProfile = (id, onSuccess, onError, onStart) => {
+  store.dispatch(
+    apiCallBegan({
+      ...deleteAgentProfile(id),
       displayToast: false,
       onStart,
       onSuccess,
