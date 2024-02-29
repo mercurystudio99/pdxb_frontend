@@ -4,7 +4,7 @@ import dynamic from "next/dynamic.js";
 import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { settingsData } from "@/store/reducer/settingsSlice";
-import { PostAgentProfile, GetAgentProfile } from "@/store/actions/campaign";
+import { GetAgentList, UpdatePostAgentProfile } from "@/store/actions/campaign";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { translate } from "@/utils";
@@ -35,17 +35,26 @@ const UserEditAgent = () => {
   const lang = useSelector(languageData);
 
   useEffect(() => {
-    GetAgentProfile(
-      agentId,
-      (response) => {
-        const data = response && response;
-        console.log(data);
+    GetAgentList({
+      offset: '0',
+      limit: '1',
+      id: agentId,
+      onSuccess: (response) => {
+        const data = response && response.data;
+        setFormData({
+          fullName: data[0].name,
+          email: data[0].email,
+          phoneNumber: data[0].phone,
+          review: data[0].review,
+          profileImage: data[0].profile_image,
+          whatsappNumber: data[0].whatsapp
+        });
       },
-      (error) => {
-        console.log("API Error:", error);
+      onError: (error) => {
+          console.log(error);
       }
-    );
-}, [agentId]);
+    });
+  }, [agentId]);
 
   useEffect(() => {}, [lang]);
 
@@ -88,7 +97,8 @@ const UserEditAgent = () => {
     e.preventDefault();
 
     try {
-      PostAgentProfile(
+      UpdatePostAgentProfile(
+        0,
         agentId,
         formData.fullName,
         formData.email,
@@ -98,41 +108,12 @@ const UserEditAgent = () => {
         formData.review,
         userProfileData?.id,
         async (response) => {
-          console.log(response);
-          // if (response.message === "Package not found") {
-          //   toast.error(response.message);
-          //   await Swal.fire({
-          //     icon: "error",
-          //     title: "Oops...",
-          //     text: "You have not subscribed. Please subscribe first",
-          //   });
-          //   router.push("/subscription-plan"); // Redirect to the subscription page
-          // } else if (response.message === "Package Limit is over") {
-          //   await Swal.fire({
-          //     icon: "error",
-          //     title: "Oops...",
-          //     text: "Your Package Limit is Over. Please Purchase Package.",
-          //     customClass: {
-          //       confirmButton: "Swal-buttons",
-          //     },
-          //   });
-          //   router.push("/subscription-plan"); // Redirect to the subscription page
-          // } else if (
-          //   response.message === "Package not found for add property"
-          // ) {
-          //   await Swal.fire({
-          //     icon: "error",
-          //     title: "Oops...",
-          //     text: "Package not found for add property. Please Purchase Package.",
-          //     customClass: {
-          //       confirmButton: "Swal-buttons",
-          //     },
-          //   });
-          //   router.push("/subscription-plan"); // Redirect to the subscription page
-          // } else {
-          //   toast.success(response.message);
-          //   router.push("/user/dashboard");
-          // }
+          if (response.data === "success") {
+            toast.success(response.message);
+            router.push("/user/agents");
+          } else {
+            toast.error(response.message);
+          }
         },
         (error) => {
           toast.error(error);

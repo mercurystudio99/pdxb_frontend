@@ -846,53 +846,16 @@ export const updatePostAgentProfile = (
   agency_id
 ) => {
   let data = new FormData();
-
-  // // Append the property data to the FormData object
-  // data.append("action_type", action_type);
-  // data.append("id", id);
-  // data.append("package_id", package_id);
-  // data.append("title", title);
-  // data.append("description", description);
-  // data.append("city", city);
-  // data.append("state", state);
-  // data.append("country", country);
-  // data.append("latitude", latitude);
-  // data.append("longitude", longitude);
-  // data.append("address", address);
-  // data.append("price", price);
-  // data.append("category_id", category_id);
-  // data.append("property_type", property_type);
-  // data.append("video_link", video_link);
-  // data.append("dld_permit_number", dldPermitNumber);
-  // // Append the parameters array if it is an array
-  // if (Array.isArray(parameters)) {
-  //   parameters.forEach((parameter, index) => {
-  //     data.append(`parameters[${index}][parameter_id]`, parameter.parameter_id);
-  //     data.append(`parameters[${index}][value]`, parameter.value);
-  //   });
-  // }
-  // // Append the facilities array if it is an array
-  // if (Array.isArray(facilities)) {
-  //   facilities.forEach((facility, index) => {
-  //     data.append(`facilities[${index}][facility_id]`, facility.facility_id);
-  //     data.append(`facilities[${index}][distance]`, facility.distance);
-  //   });
-  // }
-  // data.append("title_image", title_image);
-  // data.append("threeD_image", threeD_image);
-
-  // // Check if gallery_images is defined and an array before using forEach
-  // if (Array.isArray(gallery_images)) {
-  //   gallery_images.forEach((image, index) => {
-  //     data.append(`gallery_images[${index}]`, image);
-  //   });
-  // }
-  // data.append("slug_id", slug_id);
-  // data.append("meta_title", meta_title);
-  // data.append("meta_description", meta_description);
-  // data.append("meta_keywords", meta_keywords);
-  // data.append("meta_image", meta_image);
-  // data.append("rentduration", rentduration);
+  // Append the property data to the FormData object
+  data.append("id", id);
+  data.append("action_type", action_type);
+  data.append("name", name);
+  data.append("email", email);
+  data.append("phone", phone);
+  data.append("whatsapp", whatsapp);
+  data.append("profile_image", profile);
+  data.append("review", review);
+  data.append("agency_id", agency_id);
 
   return {
     url: `${UPDATE_POST_AGENT}`,
