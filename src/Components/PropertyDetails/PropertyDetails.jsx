@@ -890,7 +890,20 @@ const PropertyDetails = () => {
                             </a>
                           )}
                         </div>
-
+                        {getPropData && getPropData.agent_type? (
+                          <div>
+                            <div style={{float: "left"}}>
+                              <Image
+                                loading="lazy"
+                                width={50}
+                                height={50}
+                                src={getPropData && getPropData.profile}
+                                alt="no_img"
+                              />
+                            </div>
+                            <div className="my-3 mx-2"><span>{getPropData.customer_name}</span></div>
+                          </div>
+                        ) : <div></div>}
                         {/* {showChat &&
                           isMessagingSupported &&
                           notificationPermissionGranted && (
