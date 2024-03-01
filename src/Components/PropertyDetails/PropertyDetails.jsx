@@ -29,6 +29,7 @@ import { useRouter } from "next/router";
 import {
   GetFeturedListingsApi,
   intrestedPropertyApi,
+  GetAgentList
 } from "@/store/actions/campaign";
 import Header from "@/Components/Header/Header";
 import Footer from "@/Components/Footer/Footer";
@@ -73,12 +74,30 @@ const PropertyDetails = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [play, setPlay] = useState(false);
   const [imageURL, setImageURL] = useState("");
+  const [agentList, setAgentList] = useState([]);
+  const [imagePath, setImagePath] = useState('');
 
   const lang = useSelector(languageData);
   const isLoggedIn = useSelector((state) => state.User_signup);
   const DummyImgData = useSelector(settingsData);
   const CompanyName = DummyImgData && DummyImgData.company_name;
   const themeEnabled = isThemeEnabled();
+
+  useEffect(() => {
+    GetAgentList({
+      offset: '0',
+      limit: '10000',
+      agency_id: isLoggedIn ? userCurrentId : "",
+      onSuccess: (response) => {
+          console.log(response);
+          setImagePath(response.imagepath);
+          setAgentList(response.data);
+      },
+      onError: (error) => {
+          console.log(error);
+      }
+    });
+  }, []);
 
   useEffect(() => {}, [lang]);
   useEffect(() => {
@@ -154,6 +173,35 @@ const PropertyDetails = () => {
     : PlaceHolderImg;
 
   const galleryPhotos = getPropData && getPropData.gallery;
+
+  const getAgentInfo = (agentId, agentType, param) => {
+    let profile = "";
+    let name = "";
+    let email = "";
+    let phone = "";
+    let whatsapp = "";
+    if (agentType == 0) { // main company
+      profile = getPropData.profile? getPropData.profile : PlaceHolderImg;
+      name = getPropData.customer_name;
+      email = getPropData.email;
+      phone = getPropData.mobile;
+      whatsapp = getPropData.whatsapp_number;
+    } else {  // agent
+      let list = agentList.filter((ele) => ele.id == agentId);
+      profile = list[0].profile_image? (imagePath + list[0].profile_image) : PlaceHolderImg;
+      name = list[0].name;
+      email = list[0].email;
+      phone = list[0].phone;
+      whatsapp = list[0].whatsapp;
+    }
+
+    if (param == 0) return profile;
+    if (param == 1) return name;
+    if (param == 2) return email;
+    if (param == 3) return phone;
+    if (param == 4) return whatsapp;
+    return '';
+  };
 
   const openLightbox = (index) => {
     setCurrentImage(index);
@@ -722,11 +770,7 @@ const PropertyDetails = () => {
                             loading="lazy"
                             width={200}
                             height={200}
-                            src={
-                              getPropData && getPropData.profile
-                                ? getPropData.profile
-                                : PlaceHolderImg
-                            }
+                            src={getPropData && getAgentInfo(getPropData.agentid, getPropData.agent_type, 0)}
                             className="owner-img"
                             alt="no_img"
                           />
@@ -734,7 +778,7 @@ const PropertyDetails = () => {
                         <div className="owner-deatils">
                           <span className="owner-name">
                             {" "}
-                            {getPropData && getPropData.customer_name}
+                            {getPropData && getAgentInfo(getPropData.agentid, getPropData.agent_type, 1)}
                           </span>
                           <span className="owner-add">
                             {" "}
@@ -753,7 +797,7 @@ const PropertyDetails = () => {
                           }}
                         >
                           <a
-                            href={`tel:${getPropData && getPropData.mobile}`}
+                            href={`tel:${getPropData && getAgentInfo(getPropData.agentid, getPropData.agent_type, 3)}`}
                             style={{
                               flex: 1,
                             }}
@@ -780,7 +824,7 @@ const PropertyDetails = () => {
                             </div>
                           </a>
                           <a
-                            href={`mailto:${getPropData && getPropData.email}`}
+                            href={`mailto:${getPropData && getAgentInfo(getPropData.agentid, getPropData.agent_type, 2)}`}
                             style={{
                               flex: 1,
                             }}
@@ -813,7 +857,7 @@ const PropertyDetails = () => {
                                 flex: 1,
                               }}
                               href={`https://api.whatsapp.com/send?phone=${
-                                getPropData && getPropData.whatsapp_number
+                                getPropData && getAgentInfo(getPropData.agentid, getPropData.agent_type, 4)
                               }&text=${whatsappMessage}`}
                               target="_blank"
                               rel="noopener noreferrer"
