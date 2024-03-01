@@ -29,6 +29,7 @@ const UserAgents = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [agentList, setAgentList] = useState([]);
     const [total, setTotal] = useState(0);
+    const [imagePath, setImagePath] = useState('');
     const [offsetdata, setOffsetdata] = useState(0);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [agentIdToDelete, setAgentIdToDelete] = useState(null);
@@ -64,6 +65,7 @@ const UserAgents = () => {
                         onSuccess: (response) => {
                             console.log(response);
                             setTotal(response.total);
+                            setImagePath(response.imagepath);
                             setIsLoading(false);
                             setAgentList(response.data);
                         },
@@ -90,6 +92,7 @@ const UserAgents = () => {
             onSuccess: (response) => {
                 console.log(response);
                 setTotal(response.total);
+                setImagePath(response.imagepath);
                 setIsLoading(false);
                 setAgentList(response.data);
             },
@@ -169,7 +172,7 @@ const UserAgents = () => {
                                                     <TableCell component="th" scope="row">
                                                         <div className="card" id="listing_card">
                                                             <div className="listing_card_img">
-                                                                <Image loading="lazy" src={elem.profile_image} alt="no_img" width={80} height={80} style={{ borderRadius: 80 }} />
+                                                                <Image loading="lazy" src={imagePath + elem.profile_image} alt="no_img" width={80} height={80} style={{ borderRadius: 80 }} />
                                                             </div>
                                                         </div>
                                                     </TableCell>

@@ -49,6 +49,8 @@ const UserEditAgent = () => {
           profileImage: data[0].profile_image,
           whatsappNumber: data[0].whatsapp
         });
+        const imagepath = response && response.imagepath;
+        setUploadedImage(imagepath + data[0].profile_image);
       },
       onError: (error) => {
           console.log(error);
