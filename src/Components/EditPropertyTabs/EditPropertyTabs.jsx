@@ -9,7 +9,7 @@ import { translate } from "@/utils";
 import {
   GetFacilitiesApi,
   GetFeturedListingsApi,
-  PostProperty,
+  GetAgentList,
   UpdatePostProperty,
 } from "@/store/actions/campaign";
 import GoogleMapBox from "../Location/GoogleMapBox";
@@ -75,6 +75,7 @@ export default function EditPropertyTabs() {
   const packageId =
     SettingsData?.package?.user_purchased_package[0]?.package_id;
   const [value, setValue] = useState(0);
+  const [agentList, setAgentList] = useState([]);
   const [getFacilities, setGetFacilities] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [uploaded3DImages, setUploaded3DImages] = useState([]); // State to store uploaded images
@@ -88,6 +89,9 @@ export default function EditPropertyTabs() {
 
   const [tab1, setTab1] = useState({
     propertyType: "",
+    agent: "",
+    agentDisplayed: "",
+    agentType: "",
     category: "",
     title: "",
     price: "",
@@ -123,7 +127,18 @@ export default function EditPropertyTabs() {
         console.log(error);
       }
     );
-  }, []);
+    GetAgentList({
+      offset: '0',
+      limit: '1000',
+      agency_id: isLoggedIn ? userCurrentId : "",
+      onSuccess: (response) => {
+        setAgentList(response.data);
+      },
+      onError: (error) => {
+          console.log(error);
+      }
+    });
+  }, [isLoggedIn]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -141,6 +156,9 @@ export default function EditPropertyTabs() {
             propertyType:
               propertyData.property_type === "sell" ? "0" : "1" || "",
             category: propertyData.category.id || "",
+            agent: propertyData.agentid,
+            agentDisplayed: (propertyData.agent_type == 1)? propertyData.agentid : "main",
+            agentType: propertyData.agent_type,
             title: propertyData.title || "",
             price: propertyData.price || "",
             propertyDesc: propertyData.description || "",
@@ -375,6 +393,37 @@ export default function EditPropertyTabs() {
       }
     }
   }, [tab1.category, Categorydata]);
+
+  const handleAgentChange = (e) => {
+    e.preventDefault();
+    const selectedAgent = e.target.value;
+    console.log(selectedAgent);
+    if (selectedAgent == 'main') {
+      setTab1({
+        ...tab1,
+        agentType: "0",
+        agentDisplayed: selectedAgent,
+        agent: userCurrentId, // Update formData with the ID
+      });
+    } else {
+      const selectedAgentId = parseInt(selectedAgent);
+      if (selectedAgentId == NaN) {
+        setTab1({
+          ...tab1,
+          agentType: "0",
+          agentDisplayed: selectedAgent,
+          agent: "", // Update formData with the ID
+        });
+      } else {
+        setTab1({
+          ...tab1,
+          agentType: "1",
+          agentDisplayed: selectedAgent,
+          agent: selectedAgentId, // Update formData with the ID
+        });
+      }
+    }
+  };
 
   const handlePropertyTypes = (e) => {
     const selectedValue = e.target.value;
@@ -729,6 +778,7 @@ export default function EditPropertyTabs() {
     if (
       !tab.propertyType ||
       !tab.category ||
+      !tab.agent ||
       !tab.title ||
       !tab.price ||
       !tab.propertyDesc
@@ -881,6 +931,8 @@ export default function EditPropertyTabs() {
         "0",
         "",
         packageId ? packageId : "",
+        tab1.agent,
+        tab1.agentType,
         tab1.title,
         tab1.dldPermitNumber,
         tab1.propertyDesc,
@@ -966,6 +1018,25 @@ export default function EditPropertyTabs() {
           <div className="row" id="add_prop_form_row">
             <div className="col-sm-12 col-md-6">
               <div id="add_prop_form">
+                <div className="add_prop_fields">
+                  <span>{translate("agents")}</span>
+                  <select
+                    className="form-select"
+                    aria-label="Default select"
+                    name="agents"
+                    value={tab1.agentDisplayed}
+                    onChange={handleAgentChange}
+                  >
+                    <option value="">{translate("selectAgent")}</option>
+                    <option value="main">{translate("mainCompany")}</option>
+                    {agentList && agentList.length > 0 &&
+                      agentList.map((ele, index) => (
+                        <option key={index} value={ele.id}>
+                          {ele.name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
                 <div className="add_prop_fields">
                   <span>{translate("propTypes")}</span>
                   <div className="add_prop_types">
