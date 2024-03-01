@@ -82,6 +82,7 @@ export default function EditPropertyTabs() {
   const [galleryImages, setGalleryImages] = useState([]); // State to store uploaded images
   const [defaultGallryImages, setDefaultGallryImages] = useState([]);
   const [uploadedOgImages, setUploadedOgImages] = useState([]); // State to store uploaded images
+  const [uploadedVideos, setUploadedVideos] = useState([]);
   const [categoryParameters, setCategoryParameters] = useState([]);
   const [selectedLocationAddress, setSelectedLocationAddress] = useState("");
   const [lat, setLat] = useState();
@@ -108,6 +109,7 @@ export default function EditPropertyTabs() {
     titleImage: [],
     _3DImages: [],
     galleryImages: [],
+    video: [],
     videoLink: "",
   });
   const [tab6, setTab6] = useState({
@@ -319,6 +321,31 @@ export default function EditPropertyTabs() {
             })
             .catch((error) => {
               console.error("Error fetching image data:", error);
+            });
+        }
+
+        if (propertyData.video) {
+          const videoURL = propertyData.video;
+
+          fetch(videoURL)
+            .then((response) => response.blob())
+            .then((blob) => {
+              if (blob.type === "video/mp4") {
+                const file = new File([blob], "video.mp4", {
+                  type: blob.type,
+                });
+
+                setUploadedVideos([file]);
+                setTab5((prevState) => ({
+                  ...prevState,
+                  video: [file],
+                }));
+              } else {
+                console.error("Fetched file is not a Video.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching Video data:", error);
             });
         }
 
@@ -762,6 +789,52 @@ export default function EditPropertyTabs() {
     [uploadedOgImages]
   );
 
+  const onDropVideo = useCallback((acceptedFiles) => {
+    setUploadedVideos((prevVideos) => [...prevVideos, ...acceptedFiles]);
+    setTab5((prevState) => ({
+      ...prevState,
+      video: acceptedFiles,
+    }));
+  }, []);
+
+  const removeVideo = (index) => {
+    setUploadedVideos((prevVideos) =>
+      prevVideos.filter((_, i) => i !== index)
+    );
+  };
+
+  const {
+    getRootProps: getRootPropsVideo,
+    getInputProps: getInputPropsVideo,
+    isDragActive: isDragActiveVideo,
+  } = useDropzone({
+    onDrop: onDropVideo,
+    accept: "video/*",
+  });
+  const filesVideo = useMemo(
+    () =>
+      uploadedVideos.map((file, index) => (
+        <div key={index} className="dropbox_img_div">
+          <video width="320" height="240" controls>
+            <source src={URL.createObjectURL(file)} type="video/mp4"></source>
+          </video>
+          <div className="dropbox_d">
+            <button
+              className="dropbox_remove_img"
+              onClick={() => removeVideo(index)}
+            >
+              <CloseIcon fontSize="25px" />
+            </button>
+            <div className="dropbox_img_deatils">
+              <span>{file.name}</span>
+              <span>{Math.round(file.size / 1024)} KB</span>
+            </div>
+          </div>
+        </div>
+      )),
+    [uploadedVideos]
+  );
+
   const handleVideoInputChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -946,6 +1019,7 @@ export default function EditPropertyTabs() {
         tab1.category,
         tab1.propertyType,
         tab5.videoLink,
+        tab5.video[0],
         parameters, // Pass the combined parameters as "allParameters"
         facilities,
         tab5.titleImage[0],
@@ -1655,7 +1729,7 @@ export default function EditPropertyTabs() {
               </div>
             </div>
             <div className="col-sm-12 col-md-6 col-lg-3">
-              <div className="add_prop_fields">
+              <div className="add_prop_fields d-none">
                 <span>{translate("videoLink")}</span>
                 <input
                   type="input"
@@ -1665,6 +1739,31 @@ export default function EditPropertyTabs() {
                   value={tab5.videoLink}
                   onChange={handleVideoInputChange}
                 />
+              </div>
+              <div className="add_prop_fields">
+                <span>{translate("video")}</span>
+                <div className="dropbox">
+                  <div
+                    {...getRootPropsVideo()}
+                    className={`dropzone ${isDragActiveVideo ? "active" : ""}`}
+                  >
+                    <input {...getInputPropsVideo()} />
+                    {uploadedVideos.length === 0 ? (
+                      isDragActiveVideo ? (
+                        <span>{translate("dropFiles")}</span>
+                      ) : (
+                        <span>
+                          {translate("dragFiles")}{" "}
+                          <span style={{ textDecoration: "underline" }}>
+                            {" "}
+                            {translate("browse")}
+                          </span>
+                        </span>
+                      )
+                    ) : null}
+                  </div>
+                  <div>{filesVideo}</div>
+                </div>
               </div>
             </div>
           </div>

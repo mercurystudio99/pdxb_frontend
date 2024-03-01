@@ -406,6 +406,7 @@ export const postProperty = (
   category_id,
   property_type,
   video_link,
+  video,
   parameters,
   facilities,
   title_image,
@@ -436,6 +437,7 @@ export const postProperty = (
   data.append("category_id", category_id);
   data.append("property_type", property_type);
   data.append("video_link", video_link);
+  data.append("video", video);
   data.append("meta_title", meta_title);
   data.append("meta_description", meta_description);
   data.append("meta_keywords", meta_keywords);
@@ -529,6 +531,7 @@ export const updatePostProperty = (
   category_id,
   property_type,
   video_link,
+  video,
   parameters,
   facilities,
   title_image,
@@ -561,6 +564,7 @@ export const updatePostProperty = (
   data.append("category_id", category_id);
   data.append("property_type", property_type);
   data.append("video_link", video_link);
+  data.append("video", video);
   data.append("dld_permit_number", dldPermitNumber);
   // Append the parameters array if it is an array
   if (Array.isArray(parameters)) {
