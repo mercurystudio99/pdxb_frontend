@@ -71,6 +71,7 @@ export const getSettingApi = (type, user_id) => {
 
 // USER SIGNUP
 export const user_signupApi = (
+  customertype,
   name,
   email,
   mobile,
@@ -84,6 +85,7 @@ export const user_signupApi = (
   whatsappNumber
 ) => {
   let data = new FormData();
+  data.append("customertype", customertype);
   data.append("name", name);
   data.append("email", email);
   data.append("mobile", mobile);

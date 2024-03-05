@@ -32,6 +32,7 @@ export const isSubscribeRoutes = [
 export const protectedRoutes = [
   "/user/chat/",
   "/user-register/",
+  "/user-register2/",
   "/user/profile/",
   "/user/favorites-properties/",
   "/user/change-password/",

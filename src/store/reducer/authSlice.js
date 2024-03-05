@@ -49,6 +49,7 @@ export default authSlice.reducer;
 
 //  API CALLS
 export const signupLoaded = (
+  customertype,
   name,
   email,
   mobile,
@@ -67,6 +68,7 @@ export const signupLoaded = (
   store.dispatch(
     apiCallBegan({
       ...user_signupApi(
+        customertype,
         name,
         email,
         mobile,

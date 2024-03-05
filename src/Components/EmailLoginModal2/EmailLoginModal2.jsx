@@ -25,7 +25,7 @@ import axios from "axios";
 const backend_api = process.env.NEXT_PUBLIC_API_URL;
 const end_point = process.env.NEXT_PUBLIC_END_POINT;
 
-const EmailLoginModal = ({ isOpen, onClose }) => {
+const EmailLoginModal2 = ({ isOpen, onClose }) => {
   const LOGIN = "login";
   const REGISTER = "register";
   const [modalType, setModalType] = useState(LOGIN);
@@ -43,7 +43,7 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
 
   const onLoginSuccess = (result) => {
     signupLoaded(
-      0,
+      1,
       "",
       result.user.email,
       result.user.phoneNumber ? result.user.phoneNumber?.replace("+", "") : "",
@@ -67,7 +67,7 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
             // signupData.address === "" ||
             signupData.logintype === ""
           ) {
-            navigate.push("/user-register", {
+            navigate.push("/user-register2", {
               isLogin: modalType === LOGIN,
             });
             onClose(); // Close the modal
@@ -186,7 +186,7 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
                       toast.error("Invalid Email or Password");
                     } else {
                       signupLoaded(
-                          0,
+                          1,
                           "",
                           "",
                           res.data.mobile,
@@ -210,7 +210,7 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
                                   // signupData.address === "" ||
                                   signupData.logintype === ""
                               ) {
-                                navigate.push("/user-register");
+                                navigate.push("/user-register2");
                                 onClose(); // Close the modal
                               } else {
                                 toast.success(res.message); // Show a success toast
@@ -417,4 +417,4 @@ const EmailLoginModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default EmailLoginModal;
+export default EmailLoginModal2;

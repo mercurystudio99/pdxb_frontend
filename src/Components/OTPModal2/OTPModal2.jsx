@@ -16,7 +16,7 @@ import {
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 
-const OTPModal = ({ isOpen, onClose, phonenum }) => {
+const OTPModal2 = ({ isOpen, onClose, phonenum }) => {
   const SettingsData = useSelector(settingsData);
   const isDemo = SettingsData?.demo_mode;
 
@@ -127,7 +127,7 @@ const OTPModal = ({ isOpen, onClose, phonenum }) => {
         // User verified successfully.
 
         signupLoaded(
-          0,
+          1,
           "",
           "",
           result.user.phoneNumber.replace("+", ""),
@@ -151,7 +151,7 @@ const OTPModal = ({ isOpen, onClose, phonenum }) => {
                 // signupData.address === "" ||
                 signupData.logintype === ""
               ) {
-                navigate.push("/user-register");
+                navigate.push("/user-register2");
                 onClose(); // Close the modal
               } else {
                 toast.success(res.message); // Show a success toast
@@ -366,4 +366,4 @@ const OTPModal = ({ isOpen, onClose, phonenum }) => {
   );
 };
 
-export default OTPModal;
+export default OTPModal2;

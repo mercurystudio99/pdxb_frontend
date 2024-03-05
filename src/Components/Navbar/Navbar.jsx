@@ -6,7 +6,6 @@ import { CloseButton, Dropdown } from "react-bootstrap";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Link from "next/link";
 import { FiPlusCircle } from "react-icons/fi";
-import LoginModal from "../LoginModal/LoginModal";
 import AreaConverter from "../AreaConverter/AreaConverter";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useSelector } from "react-redux";
@@ -23,7 +22,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { silderCacheData } from "@/store/reducer/momentSlice";
 import FirebaseData from "@/utils/Firebase";
-import LoginOptionsModal from "../LoginOptionsModal/LoginOptionsModal";
+import LoginOptionsModal2 from "../LoginOptionsModal2/LoginOptionsModal2";
 import EmailLoginModal from "../EmailLoginModal/EmailLoginModal";
 
 const Nav = () => {
@@ -390,16 +389,16 @@ const Nav = () => {
                   <li className="nav-item">
                     {
                       // Check if signupData.data is null
-                      // signupData?.data === null ? (
-                      //   <a
-                      //     className="nav-link"
-                      //     to="/"
-                      //     onClick={handleOpenModal}
-                      //   >
-                      //     <RiUserSmileLine size={20} className="icon" />
-                      //     {translate("login&Regiser")}
-                      //   </a>
-                      // ) : 
+                      signupData?.data === null ? (
+                        <a
+                          className="nav-link"
+                          to="/"
+                          onClick={handleOpenModal}
+                        >
+                          <RiUserSmileLine size={20} className="icon" />
+                          {translate("login&Regiser")}
+                        </a>
+                      ) : 
                       // Check if mobile and firebase_id are present
                       signupData?.data?.data.mobile &&
                         signupData?.data?.data.firebase_id &&
@@ -604,12 +603,12 @@ const Nav = () => {
                 <li className="nav-item">
                   {
                     // Check if signupData.data is null
-                    // signupData?.data === null ? (
-                    //   <a className="nav-link" to="/" onClick={handleOpenModal}>
-                    //     <RiUserSmileLine size={20} className="icon" />
-                    //     {translate("login&Regiser")}
-                    //   </a>
-                    // ) : 
+                    signupData?.data === null ? (
+                      <a className="nav-link" to="/" onClick={handleOpenModal}>
+                        <RiUserSmileLine size={20} className="icon" />
+                        {translate("login&Regiser")}
+                      </a>
+                    ) : 
                     // Check if mobile and firebase_id are present
                     signupData?.data?.data.mobile &&
                       signupData?.data?.data.firebase_id &&
@@ -655,8 +654,7 @@ const Nav = () => {
           </Offcanvas.Body>
         </Offcanvas>
       </div>
-      {/* <LoginModal isOpen={showModal} onClose={handleCloseModal} /> */}
-      <LoginOptionsModal isOpen={showModal} onClose={handleCloseModal} />
+      <LoginOptionsModal2 isOpen={showModal} onClose={handleCloseModal} />
       <AreaConverter isOpen={areaconverterModal} onClose={handleCloseAcModal} />
     </>
   );

@@ -25,7 +25,8 @@ const AdminHeader = () => {
     const [selectedLanguage, setSelectedLanguage] = useState(language.name);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-
+    const isLoggedIn = useSelector((state) => state.User_signup);
+    const userType = isLoggedIn && isLoggedIn.data ? isLoggedIn.data.data.customertype : null;
   
     useEffect(() => {
         if (language && language.rtl === 1) {
@@ -135,14 +136,16 @@ const AdminHeader = () => {
                                     ))}
                             </Dropdown.Menu>
                         </Dropdown>
-                        <Box>
-                            <Link href="/user/properties">
-                                <button className="btn" id="dashboard_add">
-                                    <FiPlusCircle size={20} className="mx-2 add-nav-button" />
-                                    {translate("addProp")}
-                                </button>
-                            </Link>
-                        </Box>
+                        { userType == 0 && (
+                            <Box>
+                                <Link href="/user/properties">
+                                    <button className="btn" id="dashboard_add">
+                                        <FiPlusCircle size={20} className="mx-2 add-nav-button" />
+                                        {translate("addProp")}
+                                    </button>
+                                </Link>
+                            </Box>
+                        )}
                     </Box>
                     <Box sx={{ display: { md: "flex", lg: "none" } }}>
                         <IconButton size="large" aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="#000">
