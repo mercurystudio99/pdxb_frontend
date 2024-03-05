@@ -129,6 +129,8 @@ export default function VerticleLayout(props) {
   const isLoggedIn = useSelector((state) => state.User_signup);
   const userCurrentId =
     isLoggedIn && isLoggedIn.data ? isLoggedIn.data.data.id : null;
+  const userType =
+    isLoggedIn && isLoggedIn.data ? isLoggedIn.data.data.customertype : null;
   const settingData = useSelector(settingsData);
   useEffect(() => {
     settingsLoaded(
@@ -460,163 +462,175 @@ export default function VerticleLayout(props) {
         </DrawerHeader>
         <Divider />
         <List className="drawer_list">
-          <ListItem
-            disablePadding
-            sx={{ display: "block" }}
-            className={
-              isRouteActive("/user/dashboard")
-                ? "drawer_list_item_active"
-                : "drawer_list_item"
-            }
-          >
-            <Link href="/user/dashboard">
-              <ListItemButton
-                sx={{
-                  minHeight: 30,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
+          {
+            userType == 0 && (
+              <ListItem
+                disablePadding
+                sx={{ display: "block" }}
+                className={
+                  isRouteActive("/user/dashboard")
+                    ? "drawer_list_item_active"
+                    : "drawer_list_item"
+                }
               >
-                <ListItemIcon
-                  className={
-                    isRouteActive("/user/dashboard")
-                      ? "drawer_list_icon_active"
-                      : "drawer_list_icon"
-                  }
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <DashboardOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={translate("myDashboard")}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-          {/**add another one to change password */}
-
-          <ListItem
-            disablePadding
-            sx={{ display: "block" }}
-            className={
-              isRouteActive("/user/advertisement")
-                ? "drawer_list_item_active"
-                : "drawer_list_item"
-            }
-          >
-            <Link href="/user/advertisement">
-              <ListItemButton
-                sx={{
-                  minHeight: 30,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
+                <Link href="/user/dashboard">
+                  <ListItemButton
+                    sx={{
+                      minHeight: 30,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      className={
+                        isRouteActive("/user/dashboard")
+                          ? "drawer_list_icon_active"
+                          : "drawer_list_icon"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <DashboardOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={translate("myDashboard")}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </Link>
+              </ListItem>
+            )
+          }
+          {
+            userType == 0 && (
+              <ListItem
+                disablePadding
+                sx={{ display: "block" }}
+                className={
+                  isRouteActive("/user/advertisement")
+                    ? "drawer_list_item_active"
+                    : "drawer_list_item"
+                }
               >
-                <ListItemIcon
-                  className={
-                    isRouteActive("/user/advertisement")
-                      ? "drawer_list_icon_active"
-                      : "drawer_list_icon"
-                  }
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <RiAdvertisementLine size={23} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={translate("myAdvertisement")}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-          <Link href="/user/properties">
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              className={
-                isRouteActive("/user/properties")
-                  ? "drawer_list_item_active"
-                  : "drawer_list_item"
-              }
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 30,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+                <Link href="/user/advertisement">
+                  <ListItemButton
+                    sx={{
+                      minHeight: 30,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      className={
+                        isRouteActive("/user/advertisement")
+                          ? "drawer_list_icon_active"
+                          : "drawer_list_icon"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <RiAdvertisementLine size={23} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={translate("myAdvertisement")}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </Link>
+              </ListItem>
+            )
+          }
+          {
+            userType == 0 && (
+              <Link href="/user/properties">
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
                   className={
                     isRouteActive("/user/properties")
-                      ? "drawer_list_icon_active"
-                      : "drawer_list_icon"
+                      ? "drawer_list_item_active"
+                      : "drawer_list_item"
                   }
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
                 >
-                  <AddHomeOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={translate("properties")}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link href="/user/favorites-properties">
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              className={
-                isRouteActive("/user/favorites-properties")
-                  ? "drawer_list_item_active"
-                  : "drawer_list_item"
-              }
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 30,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+                  <ListItemButton
+                    sx={{
+                      minHeight: 30,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      className={
+                        isRouteActive("/user/properties")
+                          ? "drawer_list_icon_active"
+                          : "drawer_list_icon"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <AddHomeOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={translate("properties")}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            )
+          }
+          {
+            userType == 1 && (
+              <Link href="/user/favorites-properties">
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
                   className={
                     isRouteActive("/user/favorites-properties")
-                      ? "drawer_list_icon_active"
-                      : "drawer_list_icon"
+                      ? "drawer_list_item_active"
+                      : "drawer_list_item"
                   }
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
                 >
-                  <FavoriteBorderOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={translate("fav")}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          {/* <Link href="/user/chat"> */}
-
-          {isMessagingSupported && notificationPermissionGranted && (
+                  <ListItemButton
+                    sx={{
+                      minHeight: 30,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      className={
+                        isRouteActive("/user/favorites-properties")
+                          ? "drawer_list_icon_active"
+                          : "drawer_list_icon"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <FavoriteBorderOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={translate("fav")}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            )
+          }
+          {isMessagingSupported && notificationPermissionGranted && userType == 1 && (
             <ListItem
               disablePadding
               sx={{ display: "block" }}
@@ -655,7 +669,6 @@ export default function VerticleLayout(props) {
               </ListItemButton>
             </ListItem>
           )}
-
           <Link href="/user/profile">
             <ListItem
               disablePadding
@@ -694,158 +707,174 @@ export default function VerticleLayout(props) {
               </ListItemButton>
             </ListItem>
           </Link>
-          <Link href="/user/agents">
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              className={
-                isRouteActive("/user/agents")
-                  ? "drawer_list_item_active"
-                  : "drawer_list_item"
-              }
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 30,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+          {
+            userType == 0 && (
+              <Link href="/user/agents">
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
                   className={
                     isRouteActive("/user/agents")
-                      ? "drawer_list_icon_active"
-                      : "drawer_list_icon"
+                      ? "drawer_list_item_active"
+                      : "drawer_list_item"
                   }
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
                 >
-                  <GroupOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={translate("myAgents")}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link href="/user/notifications">
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              className={
-                isRouteActive("/user/notifications")
-                  ? "drawer_list_item_active"
-                  : "drawer_list_item"
-              }
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 30,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+                  <ListItemButton
+                    sx={{
+                      minHeight: 30,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      className={
+                        isRouteActive("/user/agents")
+                          ? "drawer_list_icon_active"
+                          : "drawer_list_icon"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <GroupOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={translate("myAgents")}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            )
+          }
+          {
+            userType == 1 && (
+              <Link href="/user/notifications">
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
                   className={
                     isRouteActive("/user/notifications")
-                      ? "drawer_list_icon_active"
-                      : "drawer_list_icon"
+                      ? "drawer_list_item_active"
+                      : "drawer_list_item"
                   }
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
                 >
-                  <NotificationsNoneIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={translate("notification")}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link href="/user/subscription">
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              className={
-                isRouteActive("/user/subscription")
-                  ? "drawer_list_item_active"
-                  : "drawer_list_item"
-              }
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 30,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+                  <ListItemButton
+                    sx={{
+                      minHeight: 30,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      className={
+                        isRouteActive("/user/notifications")
+                          ? "drawer_list_icon_active"
+                          : "drawer_list_icon"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <NotificationsNoneIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={translate("notification")}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            )
+          }
+          {
+            userType == 0 && (
+              <Link href="/user/subscription">
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
                   className={
                     isRouteActive("/user/subscription")
-                      ? "drawer_list_icon_active"
-                      : "drawer_list_icon"
+                      ? "drawer_list_item_active"
+                      : "drawer_list_item"
                   }
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
                 >
-                  <PaidOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={translate("mySub")}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link href="/user/transaction-history">
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              className={
-                isRouteActive("/user/transaction-history")
-                  ? "drawer_list_item_active"
-                  : "drawer_list_item"
-              }
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 30,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+                  <ListItemButton
+                    sx={{
+                      minHeight: 30,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      className={
+                        isRouteActive("/user/subscription")
+                          ? "drawer_list_icon_active"
+                          : "drawer_list_icon"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <PaidOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={translate("mySub")}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            )
+          }
+          {
+            userType == 0 && (
+              <Link href="/user/transaction-history">
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
                   className={
                     isRouteActive("/user/transaction-history")
-                      ? "drawer_list_icon_active"
-                      : "drawer_list_icon"
+                      ? "drawer_list_item_active"
+                      : "drawer_list_item"
                   }
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
                 >
-                  <ReceiptIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={translate("transactionHistory")}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 30,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      className={
+                        isRouteActive("/user/transaction-history")
+                          ? "drawer_list_icon_active"
+                          : "drawer_list_icon"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <ReceiptIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={translate("transactionHistory")}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            )
+          }
           <ListItem
             disablePadding
             sx={{ display: "block" }}
