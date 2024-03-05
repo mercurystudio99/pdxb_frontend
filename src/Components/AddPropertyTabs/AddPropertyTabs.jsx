@@ -685,6 +685,10 @@ export default function AddPropertyTabs() {
     }
   };
 
+  const handleClickAdd = () => {
+    router.push(`/user/add-agent`);
+  };
+
   const handlePostproperty = async (e) => {
     e.preventDefault();
 
@@ -843,22 +847,38 @@ export default function AddPropertyTabs() {
               <div id="add_prop_form">
                 <div className="add_prop_fields">
                   <span>{translate("agents")}</span>
-                  <select
-                    className="form-select categories"
-                    aria-label="Default select"
-                    name="agents"
-                    value={tab1.agentDisplayed}
-                    onChange={handleAgentChange}
-                  >
-                    <option value="">{translate("selectAgent")}</option>
-                    <option value="main">{translate("mainCompany")}</option>
-                    {agentList && agentList.length > 0 &&
-                      agentList.map((ele, index) => (
-                        <option key={index} value={ele.id}>
-                          {ele.name}
-                        </option>
-                      ))}
-                  </select>
+                  <div className="row">
+                    <div className="col-6">
+                      <select
+                        className="form-select categories"
+                        aria-label="Default select"
+                        name="agents"
+                        value={tab1.agentDisplayed}
+                        onChange={handleAgentChange}
+                      >
+                        <option value="">{translate("selectAgent")}</option>
+                        <option value="main">{translate("mainCompany")}</option>
+                        {agentList && agentList.length > 0 &&
+                          agentList.map((ele, index) => (
+                            <option key={index} value={ele.id}>
+                              {ele.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                    <div className="col-6">
+                      <button className="btn" name="addAgent" onClick={handleClickAdd} style={{
+                        border: 'none',
+                        height: '100%',
+                        textAlign: 'center',
+                        background: '#282f39',
+                        color: 'white',
+                        borderRadius: '8px'
+                      }}>
+                        {translate("addAgent")}
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <div className="add_prop_fields">
                   <span>{translate("propTypes")}</span>
