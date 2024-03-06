@@ -346,7 +346,7 @@ const UserRegister2 = () => {
 
                           <div className="col-sm-12 col-md-6">
                             <div className="user_fields">
-                              <span>{translate("agencyName")}</span>
+                              <span>{translate("Name")}</span>
                               <input
                                 type="text"
                                 name="uname"
@@ -426,18 +426,6 @@ const UserRegister2 = () => {
                               <span>{translate("location")}</span>
                               <LocationSearchBox
                                 onLocationSelected={handleSelectLocation}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-sm-12 col-md-12">
-                            <div className="user_fields">
-                              <span>{translate("address")}</span>
-                              <textarea
-                                rows={4}
-                                className="current_address"
-                                placeholder="Enetr address"
-                                value={address}
-                                onChange={(e) => setAddress(e.target.value)}
                               />
                             </div>
                           </div>
