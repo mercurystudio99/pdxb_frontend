@@ -187,12 +187,11 @@ const PropertyDetails = () => {
       phone = getPropData.mobile;
       whatsapp = getPropData.whatsapp_number;
     } else {  // agent
-      let list = agentList.filter((ele) => ele.id == agentId);
-      profile = list[0].profile_image? (imagePath + list[0].profile_image) : PlaceHolderImg;
-      name = list[0].name;
-      email = list[0].email;
-      phone = list[0].phone;
-      whatsapp = list[0].whatsapp;
+      profile = getPropData.agent_profile? getPropData.agent_profile : PlaceHolderImg;
+      name = getPropData.agent_name;
+      email = getPropData.agent_email;
+      phone = getPropData.agent_phone;
+      whatsapp = getPropData.agent_whatsapp;
     }
 
     if (param == 0) return profile;
